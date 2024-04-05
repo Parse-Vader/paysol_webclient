@@ -1,0 +1,5 @@
+﻿[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target" : { "namespace": "android_app", "package_name": "com.BitTikk.ionic.angular",
+    "sha256_cert_fingerprints": ["07:CC:7C:72:69:AF:9A:DB:D4:BB:EF:03:1D:BA:BE:44:6D:E7:0D:C5:32:FD:24:6A:1F:00:AD:60:D8:FE:69:A0"] }
+}]

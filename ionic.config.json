@@ -1,0 +1,8 @@
+{
+  "name": "paysol",
+  "integrations": {
+    "capacitor": {},
+    "cordova": {}
+  },
+  "type": "angular"
+}

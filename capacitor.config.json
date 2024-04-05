@@ -1,0 +1,6 @@
+{
+  "appId": "com.paysol.ionic.angular",
+  "appName": "Paysol",
+  "bundledWebRuntime": false,
+  "webDir": "www"
+}

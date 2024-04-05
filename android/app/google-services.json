@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "174434523979",
+    "project_id": "bittikk-d9e25",
+    "storage_bucket": "bittikk-d9e25.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:174434523979:android:65887e4ee7ffebc3cea6ce",
+        "android_client_info": {
+          "package_name": "com.paysol.ionic.angular"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBWBaoTc2X3kkhetWkgHD9m8TK_0kGw0nU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

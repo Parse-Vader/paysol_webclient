@@ -1,0 +1,45 @@
+<ion-content [fullscreen]="true">
+  <div class="transaction-success-container">
+    <ion-card>
+      <ion-card-header>
+        <ion-card-subtitle>Transaction Complete</ion-card-subtitle>
+        <ion-card-title>Success!</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-icon class="custom-ion-icon" name="checkmark-circle" color="success" size="large"></ion-icon>
+        <p>You have successfully transferred {{amount}} {{contract}} to {{key}}.</p>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>
+<ion-footer>
+  <ion-toolbar>
+    <ion-button  expand="block" (click)="home()"><strong>Home <ion-icon name="home-outline"></ion-icon></strong></ion-button>
+  </ion-toolbar>
+</ion-footer>
+
+
+<style>
+  .transaction-success-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    padding: 20px;
+  }
+
+  ion-card {
+    text-align: center;
+    max-width: 500px;
+  }
+
+  .custom-ion-icon {
+    font-size: 72px;
+    margin-bottom: 20px;
+  }
+
+  p {
+    font-size: 1.2em;
+    margin-top: 20px;
+  }
+</style>

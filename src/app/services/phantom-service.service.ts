@@ -25,7 +25,7 @@ export class PhantomServiceService {
   private _phantom_encryption_public_key: string = "";
   private _nonce: string = "";
   private _data: any;
-  private _backToPaysol = `http://test.paysol.me/auth?${params.toString()}`;
+  private _backToPaysol = `http://test.paysol.me/auth`;
   private _connection: Connection = new Connection("https://nd-471-114-142.p2pify.com/3a2a6e114f8bead3b52300fad0789a73",
     {wsEndpoint: "wss://ws-nd-471-114-142.p2pify.com/3a2a6e114f8bead3b52300fad0789a73"});
 

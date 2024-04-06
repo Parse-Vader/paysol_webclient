@@ -1,6 +1,5 @@
 import {ActivatedRoute, Router} from "@angular/router";
 import {PhantomServiceService} from "../services/phantom-service.service";
-import {ClientRequestService} from "../services/client-request.service";
 import { Component } from '@angular/core';
 import {AppStaticGlobals} from "../globals/AppStaticGlobals";
 import * as nacl from "tweetnacl";
@@ -57,8 +56,6 @@ export class AuthPage {
   }
 }
 
-
-    // Retrieve query parameters from the URL
 
 
 

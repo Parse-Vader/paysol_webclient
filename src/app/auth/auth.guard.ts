@@ -14,8 +14,6 @@ import {AuthService} from "./auth.service";
 export class AuthGuard implements CanLoad {
   constructor(private _authService: AuthService, private router: Router) {}
   canLoad(
-    route: Route,
-    segments: UrlSegment[]
   ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
     return this._authService.getAuthenticationState().then(isAuthenticated => {
       if (isAuthenticated) {

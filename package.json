@@ -40,7 +40,7 @@
     "@solana-mobile/mobile-wallet-adapter-protocol-web3js": "^2.1.2",
     "@solana/pay": "^0.2.5",
     "@solana/spl-token": "^0.4.3",
-    "@solana/spl-token-registry": "^0.2.4574",
+    "@solana/spl-token-registry": "^0.2.7",
     "@solana/web3.js": "^1.91.1",
     "angularx-qrcode": "^16.0.2",
     "bignumber.js": "^9.1.2",

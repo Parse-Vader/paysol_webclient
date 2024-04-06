@@ -1,7 +1,7 @@
 import {Component, Input, ViewChild} from '@angular/core';
 import {Share} from '@capacitor/share';
 import {PhantomServiceService} from "../../../../services/phantom-service.service";
-import {ModalController} from "@ionic/angular";
+import {ModalController, Platform} from "@ionic/angular";
 import {QRCodeComponent} from "angularx-qrcode";
 import {TransactionModel} from "../../../../interfaces/transaction.model";
 import {AppStaticGlobals} from "../../../../globals/AppStaticGlobals";
@@ -27,7 +27,8 @@ export class TransactionComponent {
   public idUrl : string = '';
   constructor(private _phantom: PhantomServiceService,
               private _modalCtrl: ModalController,
-              private _clientRequest: ClientRequestService
+              private _clientRequest: ClientRequestService,
+              private platform: Platform
               ) {}
 
   async ngOnInit(){
@@ -38,12 +39,19 @@ export class TransactionComponent {
   }
 
   public async shareUrl() {
-    this.webLink();
-    await Share.share({
-      title: 'Paysol Transaction',
-      text: 'New Paysol transaction!\n',
-      url: this.idUrl,
-    });
+    if (this.platform.is('mobile')) {
+      // If running on mobile device, use native share
+      this.webLink();
+      await Share.share({
+        title: 'Paysol Transaction',
+        text: 'New Paysol transaction!\n',
+        url: this.idUrl,
+      });
+    } else {
+      // If running in browser, provide fallback behavior (e.g., opening share dialog in a new window)
+      // This could be a placeholder or you could implement a custom share dialog for the browser
+      alert('Please use your mobile browser instead!');
+    }
     await this.dismissModal();
   }
   public async CreateTransaction() {

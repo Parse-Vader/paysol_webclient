@@ -25,7 +25,7 @@ export class PhantomServiceService {
   private _phantom_encryption_public_key: string = "";
   private _nonce: string = "";
   private _data: any;
-  private _backToPaysol = "paysol://places/payments";
+  private _backToPaysol = `http://test.paysol.me/auth?${params.toString()}`;
   private _connection: Connection = new Connection("https://nd-471-114-142.p2pify.com/3a2a6e114f8bead3b52300fad0789a73",
     {wsEndpoint: "wss://ws-nd-471-114-142.p2pify.com/3a2a6e114f8bead3b52300fad0789a73"});
 
@@ -56,7 +56,7 @@ export class PhantomServiceService {
   public getDapKeyPair = () => this._dappKeyPair.secretKey;
 
   private buildUrl (path: string, params: URLSearchParams) {
-    return `https://phantom.app/ul/v1/${path}?${params.toString()}`;
+    return `phantom://v1/${path}?${params.toString()}`;
   };
 
   public async connect() {
@@ -68,7 +68,11 @@ export class PhantomServiceService {
     });
 
     const deepLink = this.buildUrl("connect", params);
-    window.open(deepLink, '_top');
+    try{
+      window.open(deepLink, '_top');
+    } catch (ex) {
+      alert('error msg: ' + ex)
+    }
   }
 
   public signAndSendTransaction = async (amount: number, pub: string, con: number, nanoId: string) => {

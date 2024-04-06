@@ -72,6 +72,7 @@ export class ListenerNavigationService {
             this.HandleNavigation("//transactionstatus", this.solAmount, this.solSenderPubKey, this.contract, this.nano);
           }
         }
+
         if (event.url.startsWith('paysol://places/payments')) {
 
           AppStaticGlobals.phantom_encryption_public_key = url.searchParams.get("phantom_encryption_public_key")!;

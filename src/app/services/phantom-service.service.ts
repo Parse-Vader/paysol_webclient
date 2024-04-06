@@ -34,8 +34,10 @@ export class PhantomServiceService {
 
     const decryptedData = nacl.box.open.after(bs58.decode(data), bs58.decode(nonce), sharedSecret);
     if (!decryptedData) {
+      alert('decr error');
       throw new Error("Unable to decrypt data");
     }
+
     return JSON.parse(Buffer.from(decryptedData).toString("utf8"));
   };
 

@@ -10,7 +10,8 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint",
-    "ionic": "ionic serve"
+    "ionic": "ionic serve",
+    "run local" : "ionic serve --address 0.0.0.0"
   },
   "private": true,
   "dependencies": {
@@ -32,7 +33,6 @@
     "@capacitor/keyboard": "5.0.6",
     "@capacitor/preferences": "^5.0.6",
     "@capacitor/push-notifications": "^5.1.0",
-    "@capacitor/share": "^5.0.6",
     "@capacitor/splash-screen": "^5.0.7",
     "@capacitor/status-bar": "5.0.6",
     "@ionic/angular": "^7.0.0",
@@ -89,9 +89,6 @@
     "karma-jasmine-html-reporter": "~2.0.0",
     "ts-node": "^8.3.0",
     "typescript": "^5.1.6"
-  },
-  "browser": {
-    "crypto": false
   },
   "description": "An Ionic project",
   "cordova": {

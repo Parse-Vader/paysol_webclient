@@ -11,22 +11,22 @@ const routes: Routes = [
   {
     path: 'places',
     loadChildren: () => import('./places/places.module').then( m => m.PlacesPageModule),
-    canLoad: [AuthGuard]
+    // canLoad: [AuthGuard]
   },
   {
     path: 'payments',
     loadChildren: () => import('./places/payments/payments.module').then( m => m.PaymentsPageModule),
-    canLoad: [AuthGuard]
+    // canLoad: [AuthGuard]
   },
   {
     path: 'scan',
     loadChildren: () => import('./places/scan/scan.module').then( m => m.ScanPageModule),
-    canLoad: [AuthGuard]
+    // canLoad: [AuthGuard]
   },
   {
     path: 'about-us',
     loadChildren: () => import('./places/about-us/about-us.module').then( m => m.AboutUsPageModule),
-    canLoad: [AuthGuard]
+    // canLoad: [AuthGuard]
   },
   {
     path: 'auth',
@@ -39,17 +39,17 @@ const routes: Routes = [
   {
     path: 'transactionstatus',
     loadChildren: () => import('./transactionstatus/transactionstatus.module').then( m => m.TransactionstatusPageModule),
-    canLoad: [AuthGuard]
+    // canLoad: [AuthGuard]
   },
   {
     path: 'wallet',
     loadChildren: () => import('./places/wallet/wallet.module').then( m => m.WalletPageModule),
-    canLoad: [AuthGuard]
+    // canLoad: [AuthGuard]
   },
   {
     path: 'solsendertransaction',
     loadChildren: () => import('./solsendertransaction/solsendertransaction.module').then( m => m.SolsendertransactionPageModule),
-    canLoad: [AuthGuard]
+    // canLoad: [AuthGuard]
   }
 ];
 

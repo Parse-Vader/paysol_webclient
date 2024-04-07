@@ -1,5 +1,4 @@
 import {Component, Input, ViewChild} from '@angular/core';
-import {Share} from '@capacitor/share';
 import {PhantomServiceService} from "../../../../services/phantom-service.service";
 import {ModalController, Platform} from "@ionic/angular";
 import {QRCodeComponent} from "angularx-qrcode";
@@ -40,17 +39,14 @@ export class TransactionComponent {
 
   public async shareUrl() {
     if (this.platform.is('mobile')) {
-      // If running on mobile device, use native share
       this.webLink();
-      await Share.share({
+      await navigator.share({
         title: 'Paysol Transaction',
         text: 'New Paysol transaction!\n',
         url: this.idUrl,
       });
     } else {
-      // If running in browser, provide fallback behavior (e.g., opening share dialog in a new window)
-      // This could be a placeholder or you could implement a custom share dialog for the browser
-      alert('Please use your mobile browser instead!');
+      alert('Please use your mobile browser!');
     }
     await this.dismissModal();
   }

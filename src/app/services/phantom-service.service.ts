@@ -25,20 +25,26 @@ export class PhantomServiceService {
   private _phantom_encryption_public_key: string = "";
   private _nonce: string = "";
   private _data: any;
-  private _backToPaysol = `http://test.paysol.me/auth`;
+  // private _backToPaysol = `http://test.paysol.me/places/payements`;
+  private _backToPaysol = `http://192.168.1.69:8100/places/payements`;
   private _connection: Connection = new Connection("https://nd-471-114-142.p2pify.com/3a2a6e114f8bead3b52300fad0789a73",
     {wsEndpoint: "wss://ws-nd-471-114-142.p2pify.com/3a2a6e114f8bead3b52300fad0789a73"});
 
-  public decryptPayload = (data: string, nonce: string, sharedSecret?: Uint8Array) => {
+  public decryptPayload = (data: string, nonce: string, sharedSecret: Uint8Array) : any => {
+
+    alert(data);
+    alert(nonce);
+    alert(sharedSecret);
+
     if (!sharedSecret) throw new Error("missing shared secret");
 
-    const decryptedData = nacl.box.open.after(bs58.decode(data), bs58.decode(nonce), sharedSecret);
-    if (!decryptedData) {
-      alert('decr error');
-      throw new Error("Unable to decrypt data");
-    }
+      const decryptedData = nacl.box.open.after(bs58.decode(data), bs58.decode(nonce), sharedSecret);
+      if (!decryptedData) {
+        alert(decryptedData);
+        throw new Error("Unable to decrypt data");
+      }
 
-    return JSON.parse(Buffer.from(decryptedData).toString("utf8"));
+      return JSON.parse(Buffer.from(decryptedData).toString("utf8"));
   };
 
   public encryptPayload = (payload: any, sharedSecret?: Uint8Array) => {

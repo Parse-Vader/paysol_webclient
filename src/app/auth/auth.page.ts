@@ -5,7 +5,6 @@ import { AppStaticGlobals } from "../globals/AppStaticGlobals";
 import * as nacl from "tweetnacl";
 import * as bs58 from "bs58";
 import { ConnectData } from "../interfaces/connect.data";
-import {PublicKey} from "@solana/web3.js";
 
 @Component({
   selector: 'app-auth',
@@ -16,44 +15,23 @@ import {PublicKey} from "@solana/web3.js";
 export class AuthPage implements OnInit {
   public link: string = '';
   public showSpinner: boolean = true;
-
   constructor(private _phantomService: PhantomServiceService, private _route: ActivatedRoute, private _router: Router) { }
-
   ngOnInit() {
     this._route.queryParams.subscribe(params => {
       if (params['phantom_encryption_public_key']) {
-        AppStaticGlobals.phantom_encryption_public_key = params['phantom_encryption_public_key'];
-        AppStaticGlobals.Data = params['data']!;
-        AppStaticGlobals.Nonce = params['nonce']!;
-
-        AppStaticGlobals.sharedDapSecret = nacl.box.before(
-          bs58.decode(AppStaticGlobals.phantom_encryption_public_key!),
-          this._phantomService.getDapKeyPair()
-        );
-
-        alert(AppStaticGlobals.sharedDapSecret);
-
-        const connectData: ConnectData = this._phantomService.decryptPayload(
-          AppStaticGlobals.Data,
-          AppStaticGlobals.Nonce,
-          AppStaticGlobals.sharedDapSecret
-        );
-
-        alert('finish');
-        AppStaticGlobals.pub_key = connectData.public_key;
-        AppStaticGlobals.session = connectData.session;
-        this._router.navigateByUrl('places/payments');
+        this.handleResponse(params);
       } else {
+        alert(this._phantomService.getDapKeyPair());
         this.Connect();
       }
     });
   }
-
   handleResponse( params: any ) {
-    alert('test method')
     if (params['phantom_encryption_public_key']) {
+      alert(this._phantomService.getDapKeyPair());
+
       AppStaticGlobals.phantom_encryption_public_key = params['phantom_encryption_public_key'];
-      AppStaticGlobals.sharedDapSecret = nacl.box.before(
+     const sharedDapSecret = nacl.box.before(
         bs58.decode(AppStaticGlobals.phantom_encryption_public_key!),
         this._phantomService.getDapKeyPair()
       );
@@ -63,7 +41,7 @@ export class AuthPage implements OnInit {
       const connectData: ConnectData = this._phantomService.decryptPayload(
         AppStaticGlobals.Data,
         AppStaticGlobals.Nonce,
-        AppStaticGlobals.sharedDapSecret
+        sharedDapSecret
       );
 
       AppStaticGlobals.pub_key = connectData.public_key;
@@ -72,7 +50,6 @@ export class AuthPage implements OnInit {
       this._router.navigateByUrl('places/payments');
     }
   }
-
   Connect(): void {
     setTimeout(() => {
       this.showSpinner = false;

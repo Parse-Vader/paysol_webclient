@@ -12,13 +12,14 @@ export class CookiesService {
 
   public setNaclBoxKeyPair(keyPair: nacl.BoxKeyPair): void {
     const serializedKeyPair = JSON.stringify(keyPair);
-
     this.cookieService.set('paysolcookie', serializedKeyPair);
   }
   public getNaclBoxKeyPair(): nacl.BoxKeyPair {
     const cookieValue = this.cookieService.get('paysolcookie');
 
+    alert(cookieValue);
     return JSON.parse(cookieValue) as nacl.BoxKeyPair;
+
   }
 
 }

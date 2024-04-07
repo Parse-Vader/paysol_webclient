@@ -80,7 +80,7 @@ export class PhantomServiceService  {
   public async connect() {
     this.setCookie();
     const params = new URLSearchParams({
-      dapp_encryption_public_key: bs58.encode(this.getCookie()!.publicKey),
+      dapp_encryption_public_key: bs58.encode(this.getCookie()!.publicKey), //hier gaat ie fout
       cluster: 'mainnet-beta',
       app_url: 'https://phantom.app/',
       redirect_link: this._backToPaysol,

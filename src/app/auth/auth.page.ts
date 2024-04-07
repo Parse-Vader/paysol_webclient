@@ -29,8 +29,8 @@ export class AuthPage implements OnInit {
     if (params['phantom_encryption_public_key']) {
 
       AppStaticGlobals.phantom_encryption_public_key = params['phantom_encryption_public_key'];
-     const sharedDapSecret = nacl.box.before(
-        bs58.decode(AppStaticGlobals.phantom_encryption_public_key!),
+      const sharedDapSecret = nacl.box.before(
+        bs58.decode(AppStaticGlobals.phantom_encryption_public_key),
         this._phantomService.getDapKeyPairSecret()
       );
       AppStaticGlobals.Data = params['data']!;
@@ -44,7 +44,6 @@ export class AuthPage implements OnInit {
 
       AppStaticGlobals.pub_key = connectData.public_key;
       AppStaticGlobals.session = connectData.session;
-      alert('your publickey: ' + AppStaticGlobals.phantom_encryption_public_key);
       this._router.navigateByUrl('places/payments');
     }
   }

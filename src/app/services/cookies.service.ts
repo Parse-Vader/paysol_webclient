@@ -8,9 +8,6 @@ import {CookieService} from "ngx-cookie-service";
   providedIn: 'root'
 })
 export class CookiesService {
-  private algorithm = 'aes-256-cbc'; // Symmetric encryption algorithm
-  private key = 'mySecretKey'; // Encryption key (must be 32 bytes for AES-256)
-  private iv = window.crypto.getRandomValues(new Uint8Array(16));
   constructor(private cookieService: CookieService) {}
 
   public setNaclBoxKeyPair(keyPair: nacl.BoxKeyPair): void {
@@ -23,19 +20,5 @@ export class CookiesService {
 
     return JSON.parse(cookieValue) as nacl.BoxKeyPair;
   }
-
-  //   private encrypt(text: string): string {
-  //   const cipher = crypto.createCipheriv(this.algorithm, Buffer.from(this.key), this.iv);
-  //   let encrypted = cipher.update(text, 'utf8', 'hex');
-  //   encrypted += cipher.final('hex');
-  //   return encrypted;
-  // }
-  //
-  //   private decrypt(encryptedText: string): string {
-  //   const decipher = crypto.createDecipheriv(this.algorithm, Buffer.from(this.key), this.iv);
-  //   let decrypted = decipher.update(encryptedText, 'hex', 'utf8');
-  //   decrypted += decipher.final('utf8');
-  //   return decrypted;
-  // }
 
 }

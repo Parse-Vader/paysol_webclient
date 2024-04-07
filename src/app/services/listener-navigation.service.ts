@@ -79,7 +79,7 @@ export class ListenerNavigationService {
 
           const sharedSecretDapp = nacl.box.before(
             bs58.decode(url.searchParams.get("phantom_encryption_public_key")!),
-            this._phantomService.getDapKeyPair()
+            this._phantomService.getDapKeyPairSecret()
           );
 
           AppStaticGlobals.Data = url.searchParams.get("data")!;

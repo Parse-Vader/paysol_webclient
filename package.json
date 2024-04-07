@@ -11,7 +11,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "ionic": "ionic serve",
-    "run local" : "ionic serve --address 0.0.0.0"
+    "run local": "ionic serve --address 0.0.0.0"
   },
   "private": true,
   "dependencies": {
@@ -51,6 +51,7 @@
     "html2canvas": "^1.4.1",
     "ionicons": "^7.0.0",
     "nanoid": "^5.0.6",
+    "ngx-cookie-service": "^17.1.0",
     "rxjs": "^7.8.0",
     "tslib": "^2.3.0",
     "tweetnacl": "^1.0.3",

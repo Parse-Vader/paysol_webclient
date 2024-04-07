@@ -21,19 +21,17 @@ export class AuthPage implements OnInit {
       if (params['phantom_encryption_public_key']) {
         this.handleResponse(params);
       } else {
-        alert(this._phantomService.getDapKeyPair());
         this.Connect();
       }
     });
   }
   handleResponse( params: any ) {
     if (params['phantom_encryption_public_key']) {
-      alert(this._phantomService.getDapKeyPair());
 
       AppStaticGlobals.phantom_encryption_public_key = params['phantom_encryption_public_key'];
      const sharedDapSecret = nacl.box.before(
         bs58.decode(AppStaticGlobals.phantom_encryption_public_key!),
-        this._phantomService.getDapKeyPair()
+        this._phantomService.getDapKeyPairSecret()
       );
       AppStaticGlobals.Data = params['data']!;
       AppStaticGlobals.Nonce = params['nonce']!;

@@ -49,14 +49,8 @@ export class AuthPage implements OnInit {
           sharedDapSecret
         ); // current error. unable to decrypt data
 
-        alert("entered here4");
-
-
         AppStaticGlobals.pub_key = connectData.public_key;
         AppStaticGlobals.session = connectData.session;
-
-        alert("entered here5");
-
 
         this._router.navigateByUrl('places/payments').catch(error => {
         });

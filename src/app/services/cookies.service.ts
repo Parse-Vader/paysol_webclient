@@ -27,6 +27,11 @@ export class CookiesService {
         deserializedKeyPair.publicKey = new Uint8Array(publicKeyBytes);
       }
 
+      if (deserializedKeyPair.secretKey && typeof deserializedKeyPair.secretKey === 'object') {
+        const secretKeyBytes = Object.values(deserializedKeyPair.secretKey);
+        deserializedKeyPair.secretKey = new Uint8Array(secretKeyBytes);
+      }
+
       console.log("type checker: " + typeof deserializedKeyPair.publicKey);
       console.log("length: " + deserializedKeyPair.publicKey.length);
       console.log("publickey: " +  deserializedKeyPair.publicKey);

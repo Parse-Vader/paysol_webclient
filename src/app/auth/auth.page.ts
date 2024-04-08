@@ -19,7 +19,6 @@ export class AuthPage implements OnInit {
   ngOnInit() {
     this._route.queryParams.subscribe(params => {
       const paramsLength = Object.keys(params).length;
-      alert(paramsLength);
       if (params['phantom_encryption_public_key'] || AppStaticGlobals.phantom_encryption_public_key !== "") {
         console.log("Does enter");
         this.handleResponse(params);
@@ -33,37 +32,40 @@ export class AuthPage implements OnInit {
     if (params['phantom_encryption_public_key']) {
 
       AppStaticGlobals.phantom_encryption_public_key = params['phantom_encryption_public_key'];
-      alert(AppStaticGlobals.phantom_encryption_public_key);
 
-      const sharedDapSecret = nacl.box.before(
-        bs58.decode(AppStaticGlobals.phantom_encryption_public_key),
-        this._phantomService.getDapKeyPairSecret()
-      );
-      alert("entered here2");
+      try{
+        const sharedDapSecret = nacl.box.before(
+          bs58.decode(AppStaticGlobals.phantom_encryption_public_key),
+          this._phantomService.getDapKeyPairSecret()
+        );
 
-      AppStaticGlobals.Data = params['data']!;
-      AppStaticGlobals.Nonce = params['nonce']!;
-
-      alert("entered here3");
+        AppStaticGlobals.Data = params['data']!;
+        AppStaticGlobals.Nonce = params['nonce']!;
 
 
-      const connectData: ConnectData = this._phantomService.decryptPayload(
-        AppStaticGlobals.Data,
-        AppStaticGlobals.Nonce,
-        sharedDapSecret
-      );
+        const connectData: ConnectData = this._phantomService.decryptPayload(
+          AppStaticGlobals.Data,
+          AppStaticGlobals.Nonce,
+          sharedDapSecret
+        ); // current error. unable to decrypt data
 
-      alert("entered here4");
-
-
-      AppStaticGlobals.pub_key = connectData.public_key;
-      AppStaticGlobals.session = connectData.session;
-
-      alert("entered here5");
+        alert("entered here4");
 
 
-      this._router.navigateByUrl('places/payments').catch(error => {
-      });
+        AppStaticGlobals.pub_key = connectData.public_key;
+        AppStaticGlobals.session = connectData.session;
+
+        alert("entered here5");
+
+
+        this._router.navigateByUrl('places/payments').catch(error => {
+        });
+      }
+
+      catch (e) {
+        alert(e);
+      }
+
     }
   }
   Connect(): void {

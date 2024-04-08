@@ -16,10 +16,24 @@ export class CookiesService {
   }
   public getNaclBoxKeyPair(): nacl.BoxKeyPair {
     const cookieValue = this.cookieService.get('paysolcookie');
+    console.log(cookieValue);
+    if(cookieValue)
+    {
+      const deserializedKeyPair = JSON.parse(cookieValue) as nacl.BoxKeyPair;
 
-    alert(cookieValue);
-    return JSON.parse(cookieValue) as nacl.BoxKeyPair;
+      // Convert publicKey object to Uint8Array
+      if (deserializedKeyPair.publicKey && typeof deserializedKeyPair.publicKey === 'object') {
+        const publicKeyBytes = Object.values(deserializedKeyPair.publicKey);
+        deserializedKeyPair.publicKey = new Uint8Array(publicKeyBytes);
+      }
 
+      console.log("type checker: " + typeof deserializedKeyPair.publicKey);
+      console.log("length: " + deserializedKeyPair.publicKey.length);
+      console.log("publickey: " +  deserializedKeyPair.publicKey);
+      return deserializedKeyPair;
+    }
+
+    return null!;
   }
 
 }

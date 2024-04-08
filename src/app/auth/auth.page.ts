@@ -18,9 +18,13 @@ export class AuthPage implements OnInit {
   constructor(private _phantomService: PhantomServiceService, private _route: ActivatedRoute, private _router: Router) { }
   ngOnInit() {
     this._route.queryParams.subscribe(params => {
-      if (params['phantom_encryption_public_key']) {
+      const paramsLength = Object.keys(params).length;
+      alert(paramsLength);
+      if (params['phantom_encryption_public_key'] || AppStaticGlobals.phantom_encryption_public_key !== "") {
+        console.log("Does enter");
         this.handleResponse(params);
       } else {
+        console.log('No public key found');
         this.Connect();
       }
     });
@@ -29,12 +33,19 @@ export class AuthPage implements OnInit {
     if (params['phantom_encryption_public_key']) {
 
       AppStaticGlobals.phantom_encryption_public_key = params['phantom_encryption_public_key'];
+      alert(AppStaticGlobals.phantom_encryption_public_key);
+
       const sharedDapSecret = nacl.box.before(
         bs58.decode(AppStaticGlobals.phantom_encryption_public_key),
         this._phantomService.getDapKeyPairSecret()
       );
+      alert("entered here2");
+
       AppStaticGlobals.Data = params['data']!;
       AppStaticGlobals.Nonce = params['nonce']!;
+
+      alert("entered here3");
+
 
       const connectData: ConnectData = this._phantomService.decryptPayload(
         AppStaticGlobals.Data,
@@ -42,9 +53,17 @@ export class AuthPage implements OnInit {
         sharedDapSecret
       );
 
+      alert("entered here4");
+
+
       AppStaticGlobals.pub_key = connectData.public_key;
       AppStaticGlobals.session = connectData.session;
-      this._router.navigateByUrl('places/payments');
+
+      alert("entered here5");
+
+
+      this._router.navigateByUrl('places/payments').catch(error => {
+      });
     }
   }
   Connect(): void {

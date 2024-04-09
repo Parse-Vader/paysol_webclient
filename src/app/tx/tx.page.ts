@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+
 
 @Component({
   selector: 'app-tx',
@@ -7,9 +9,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TxPage implements OnInit {
 
-  constructor() { }
+  constructor(private _route: ActivatedRoute) { }
 
-  ngOnInit() {
+  ngOnInit()
+  {
+    const queryParams = this._route.snapshot.queryParams;
+    const data = queryParams['data'];
+
+    // Do something with the data
+    console.log('Data:', data);
   }
+
 
 }

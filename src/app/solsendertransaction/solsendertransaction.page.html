@@ -1,6 +1,10 @@
-<ion-content [fullscreen]="true" class="ion-text-center ion-padding">
-  <div class="center-container">
-    <img src="assets/images/Paysol_bw.png" alt="Logo" class="logo">
-    <ion-spinner name="crescent"></ion-spinner>
-  </div>
+<ion-content class="ion-padding" style="height: 100vh;">
+  <ion-grid style="height: 100%;">
+    <ion-row style="height: 100%;">
+      <ion-col size="12" style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
+        <ion-button (click)="makeTransaction()">Send {{amount}} {{nameContranct}}</ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>
+

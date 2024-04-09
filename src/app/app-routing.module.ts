@@ -49,7 +49,7 @@ const routes: Routes = [
   {
     path: 'solsendertransaction',
     loadChildren: () => import('./solsendertransaction/solsendertransaction.module').then( m => m.SolsendertransactionPageModule),
-    // canLoad: [AuthGuard]
+    canLoad: [AuthGuard]
   }
 ];
 

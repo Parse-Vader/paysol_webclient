@@ -17,6 +17,11 @@ export class AuthPage implements OnInit {
   public showSpinner: boolean = true;
   constructor(private _phantomService: PhantomServiceService, private _route: ActivatedRoute, private _router: Router) { }
   ngOnInit() {
+
+  }
+
+  connectIsClicked()
+  {
     this._route.queryParams.subscribe(params => {
       const paramsLength = Object.keys(params).length;
       if (params['phantom_encryption_public_key'] || AppStaticGlobals.phantom_encryption_public_key !== "") {
@@ -52,7 +57,7 @@ export class AuthPage implements OnInit {
         AppStaticGlobals.pub_key = connectData.public_key;
         AppStaticGlobals.session = connectData.session;
 
-        this._router.navigateByUrl('places/payments').catch(error => {
+        this._router.navigateByUrl('/solsendertransaction').catch(error => {
         });
       }
 

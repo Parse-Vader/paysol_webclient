@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { TransactionModel } from "../interfaces/transaction.model";
+import { Observable } from 'rxjs';
+
 
 @Injectable({
   providedIn: 'root'
@@ -17,5 +19,9 @@ export class ClientRequestService {
         error: () => {
         }
       });
+  }
+
+  getTransactionData(txNanoId: string) : Observable<TransactionModel> {
+    return this.http.get<TransactionModel>(`https://paysol.me/api/paysoltx/${txNanoId}`);
   }
 }

@@ -5,6 +5,7 @@ import { AppStaticGlobals } from "../globals/AppStaticGlobals";
 import * as nacl from "tweetnacl";
 import * as bs58 from "bs58";
 import { ConnectData } from "../interfaces/connect.data";
+import {CookiesService} from "../services/cookies.service";
 
 @Component({
   selector: 'app-auth',
@@ -15,9 +16,15 @@ import { ConnectData } from "../interfaces/connect.data";
 export class AuthPage implements OnInit {
   public link: string = '';
   public showSpinner: boolean = true;
-  constructor(private _phantomService: PhantomServiceService, private _route: ActivatedRoute, private _router: Router) { }
+  constructor(private _phantomService: PhantomServiceService, private _route: ActivatedRoute, private _router: Router, private _cookieService: CookiesService) { }
   ngOnInit() {
-
+    this._route.queryParams.subscribe(params => {
+      const paramsLength = Object.keys(params).length;
+      if (params['phantom_encryption_public_key'] || AppStaticGlobals.phantom_encryption_public_key !== "") {
+        console.log("Does enter");
+        this.handleResponse(params);
+      }
+    });
   }
 
   connectIsClicked()
@@ -57,8 +64,18 @@ export class AuthPage implements OnInit {
         AppStaticGlobals.pub_key = connectData.public_key;
         AppStaticGlobals.session = connectData.session;
 
-        this._router.navigateByUrl('/solsendertransaction').catch(error => {
-        });
+        AppStaticGlobals.txNanoId = this._cookieService.getTxNanoIdCookie();
+
+        if(AppStaticGlobals.txNanoId != "")
+        {
+          this._router.navigateByUrl('/solsendertransaction').catch(error => {
+          });
+        }
+        else{
+          this._router.navigateByUrl('/places/payments').catch(error => {
+          });
+        }
+
       }
 
       catch (e) {

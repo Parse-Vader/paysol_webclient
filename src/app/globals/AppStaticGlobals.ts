@@ -5,4 +5,5 @@ export class AppStaticGlobals {
   static session: string = "";
   static phantom_encryption_public_key: string = "";
   static redirect: boolean = false;
+  static txNanoId: string = "";
 }

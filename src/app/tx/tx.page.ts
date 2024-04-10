@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
+import {AppStaticGlobals} from "../globals/AppStaticGlobals";
+import {CookiesService} from "../services/cookies.service";
+
 
 
 @Component({
@@ -9,16 +12,15 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class TxPage implements OnInit {
 
-  constructor(private _route: ActivatedRoute) { }
+  constructor(private _route: ActivatedRoute, private _router: Router, private _cookieService: CookiesService) { }
 
-  ngOnInit()
-  {
+  ngOnInit() {
     const queryParams = this._route.snapshot.queryParams;
     const data = queryParams['data'];
-
+    AppStaticGlobals.txNanoId = data.toString();
     // Do something with the data
-    console.log('Data:', data);
+    this._cookieService.setTxNanoIdCookie(AppStaticGlobals.txNanoId);
+
+    this._router.navigateByUrl('/auth').catch(error => {});
   }
-
-
 }

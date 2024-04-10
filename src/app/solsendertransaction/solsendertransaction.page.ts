@@ -1,8 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
 import {PhantomServiceService} from "../services/phantom-service.service";
 import {ModalController} from "@ionic/angular";
 import {Contract} from "../interfaces/contract.enum";
+import {ClientRequestService} from "../services/client-request.service";
+import {AppStaticGlobals} from "../globals/AppStaticGlobals";
+import {TransactionModel} from "../interfaces/transaction.model";
+import {CookiesService} from "../services/cookies.service";
 
 @Component({
   selector: 'app-solsendertransaction',
@@ -13,28 +17,61 @@ export class SolsendertransactionPage implements OnInit {
 
   public amount: string = '';
   public key: string = '';
-  public contract: string = '';
+  public contract: number = 0;
   public nano: string = '';
   public nameContranct: string = '';
+  public transaction: TransactionModel = {id: "", contract: 0, message: "", amount: 0, sender: '', receiver: '', finalised: false, deepLink: '', date: new Date()};
   constructor(private route: ActivatedRoute,
               private _phantom: PhantomServiceService,
-              private _modalCtrl: ModalController) { }
+              private _modalCtrl: ModalController,
+              private _clientRequestService: ClientRequestService,
+              private _cookieService: CookiesService) { }
   ngOnInit()
   {
-    console.log('SolsendertransactionPage');
-    this.route.queryParams.subscribe(params => {
-      this.key = params['key'];
-      this.amount = params['amount'];
-      this.contract = params['contract'];
-      this.nano = params['nano'];
-
-    });
-
-    this.nameContranct = this.getContractName(parseInt(this.contract, 10) as Contract);
+    // this.route.queryParams.subscribe(params => {
+    //   this.key = params['key'];
+    //   this.amount = params['amount'];
+    //   this.contract = params['contract'];
+    //   this.nano = params['nano'];
+    //
+    // });
+    AppStaticGlobals.txNanoId = this._cookieService.getTxNanoIdCookie();
+    this.getTransaction();
   }
   makeTransaction()
   {
-    this._phantom.signAndSendTransaction(parseFloat(this.amount), this.key, parseInt(this.contract, 10), this.nano);
+    this._phantom.signAndSendTransaction(parseFloat(this.amount), this.key, this.contract, this.nano);
+  }
+
+  getTransaction() {
+    this._clientRequestService.getTransactionData(AppStaticGlobals.txNanoId).subscribe(
+      (data: TransactionModel) => {
+        this.transaction = data;
+        this.contract = data.contract;
+        this.amount = data.amount.toString();
+        this.nano = data.id;
+        this.nameContranct = this.getContractName(this.contract as Contract);
+        this.key = this.grabKey(data.deepLink);
+
+
+      },
+      (error) => {
+        console.error('Error fetching transaction data:', error);
+        // Handle the error here, such as displaying a message to the user
+      }
+    );
+  }
+
+  grabKey(deepLink: string): string
+  {
+
+    const parts = deepLink.split('pub/');
+
+    const afterPub = parts[1];
+
+    const subParts = afterPub.split('/');
+
+    return subParts.slice(0, subParts.indexOf('con')).join('/');
   }
 
   private getContractName(con: Contract): string {

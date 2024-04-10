@@ -131,7 +131,8 @@ export class PhantomServiceService  {
     };
 
     const [nonce, encryptedPayload] = this.encryptPayload(payload, sharedSecretDapp);
-    const backToPaysolTransactionStatus: string = `paysol://transactionstatus/amount/${amount}/pub/${pub}/con/${con}/nano/${nanoId}`;
+    // const backToPaysolTransactionStatus: string = `paysol://transactionstatus/amount/${amount}/pub/${pub}/con/${con}/nano/${nanoId}`;
+    const backToPaysolTransactionStatus: string = `http://192.168.178.157:8100/transactionstatus`;
 
     const paramsTransaction = new URLSearchParams({
       dapp_encryption_public_key: bs58.encode(this.getCookie()!.publicKey),

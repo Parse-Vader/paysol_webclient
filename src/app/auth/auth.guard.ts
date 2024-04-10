@@ -16,13 +16,14 @@ export class AuthGuard implements CanLoad {
   canLoad(
   ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
     return this._authService.getAuthenticationState().then(isAuthenticated => {
-      if (isAuthenticated) {
-        return true;
-      } else {
-        return this.router.createUrlTree(['/auth']);
-      }
-    }).catch(() => {
-      return this.router.createUrlTree(['/auth']);
+    //   if (isAuthenticated) {
+    //     return true;
+    //   } else {
+    //     return this.router.createUrlTree(['/auth']);
+    //   }
+    // }).catch(() => {
+    //   return this.router.createUrlTree(['/auth']);
+      return true;
     });
   }
 }

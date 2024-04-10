@@ -53,7 +53,7 @@ const routes: Routes = [
   },
   {
     path: 'tx',
-    loadChildren: () => import('./tx/tx.module').then( m => m.TxPageModule)
+    loadChildren: () => import('./tx/tx.module').then( m => m.TxPageModule),
   }
 ];
 

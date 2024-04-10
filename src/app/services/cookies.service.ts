@@ -10,6 +10,13 @@ import {CookieService} from "ngx-cookie-service";
 export class CookiesService {
   constructor(private cookieService: CookieService) {}
 
+  public setTxNanoIdCookie(txNanoId: string): void {
+    this.cookieService.set('nanocookie', txNanoId);
+  }
+
+  public getTxNanoIdCookie(): string {
+    return this.cookieService.get('nanocookie');
+  }
   public setNaclBoxKeyPair(keyPair: nacl.BoxKeyPair): void {
     const serializedKeyPair = JSON.stringify(keyPair);
     this.cookieService.set('paysolcookie', serializedKeyPair);

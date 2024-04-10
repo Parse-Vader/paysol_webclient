@@ -5,6 +5,7 @@ import {Contract} from "../interfaces/contract.enum";
 import {TransactionModel} from "../interfaces/transaction.model";
 import {AppStaticGlobals} from "../globals/AppStaticGlobals";
 import {ClientRequestService} from "../services/client-request.service";
+import {CookiesService} from "../services/cookies.service";
 @Component({
   selector: 'app-transactionstatus',
   templateUrl: './transactionstatus.page.html',
@@ -13,21 +14,26 @@ import {ClientRequestService} from "../services/client-request.service";
 export class TransactionstatusPage implements OnInit {
   public amount: string = '';
   public key: string = '';
-  public contract: string = '';
+  public contract: number = 0;
   public nano: string = '';
+  public nameContranct: string = '';
+  public transaction: TransactionModel = {id: "", contract: 0, message: "", amount: 0, sender: '', receiver: '', finalised: false, deepLink: '', date: new Date()};
   constructor(private route: ActivatedRoute,
               private _modalCtrl: ModalController,
               private _clientRequest: ClientRequestService,
-              private _router: Router) { }
+              private _router: Router,
+              private _cookieService: CookiesService) { }
   ngOnInit() {
-    this._modalCtrl.dismiss(null, 'cancel');
-    this.route.queryParams.subscribe(params => {
-      this.key = params['key'];
-      this.amount = params['amount'];
-      this.contract = params['contract'];
-      this.nano = params['nano'];
-    });
-    this.contract = this.getContractName(parseFloat(this.amount))
+    // this.route.queryParams.subscribe(params => {
+    //   this.key = params['key'];
+    //   this.amount = params['amount'];
+    //   this.contract = params['contract'];
+    //   this.nano = params['nano'];
+    // });
+    // this.contract = this.getContractName(parseFloat(this.amount))
+    AppStaticGlobals.txNanoId = this._cookieService.getTxNanoIdCookie();
+
+    this.getTransaction();
 
     const updateTransaction: TransactionModel =
       {
@@ -42,6 +48,37 @@ export class TransactionstatusPage implements OnInit {
         date: new Date()
       }
       this._clientRequest.transferDeepLinkUrl(updateTransaction);
+  }
+
+  getTransaction() {
+    this._clientRequest.getTransactionData(AppStaticGlobals.txNanoId).subscribe(
+      (data: TransactionModel) => {
+        this.transaction = data;
+        this.contract = data.contract;
+        this.amount = data.amount.toString();
+        this.nano = data.id;
+        this.nameContranct = this.getContractName(this.contract as Contract);
+        this.key = this.grabKey(data.deepLink);
+
+
+      },
+      (error) => {
+        console.error('Error fetching transaction data:', error);
+        // Handle the error here, such as displaying a message to the user
+      }
+    );
+  }
+
+  grabKey(deepLink: string): string
+  {
+
+    const parts = deepLink.split('pub/');
+
+    const afterPub = parts[1];
+
+    const subParts = afterPub.split('/');
+
+    return subParts.slice(0, subParts.indexOf('con')).join('/');
   }
 
   public home(){

@@ -5,6 +5,7 @@ import * as bs58 from "bs58";
 import {NavigationExtras, Router} from "@angular/router";
 import {PhantomServiceService} from "./phantom-service.service";
 import {AppStaticGlobals} from "../globals/AppStaticGlobals";
+import {CookiesService} from "./cookies.service";
 
 interface ConnectData {
   public_key: string;
@@ -23,6 +24,7 @@ export class ListenerNavigationService {
     private _phantomService: PhantomServiceService,
     private _router: Router,
     private _zone: NgZone,
+    private  cookie: CookiesService
     ) { }
 
   public initializeListener() {
@@ -79,7 +81,7 @@ export class ListenerNavigationService {
 
           const sharedSecretDapp = nacl.box.before(
             bs58.decode(url.searchParams.get("phantom_encryption_public_key")!),
-            this._phantomService.getDapKeyPairSecret()
+            this.cookie.getNaclBoxKeyPair().secretKey
           );
 
           AppStaticGlobals.Data = url.searchParams.get("data")!;

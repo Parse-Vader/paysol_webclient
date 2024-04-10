@@ -15,12 +15,9 @@ export class WalletPage implements OnInit {
   {
     this.publicKey = AppStaticGlobals.pub_key;
   }
-
   disconnect = async () =>
   {
-    AppStaticGlobals.pub_key = "";
-
+    AppStaticGlobals.DisConnect();
     window.location.reload();
   }
-
 }

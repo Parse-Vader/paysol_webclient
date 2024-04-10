@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import * as nacl from 'tweetnacl';
-import * as crypto from 'crypto';
 import {CookieService} from "ngx-cookie-service";
-
+import {AppStaticGlobals} from "../globals/AppStaticGlobals";
 
 @Injectable({
   providedIn: 'root'
@@ -16,12 +15,10 @@ export class CookiesService {
   }
   public getNaclBoxKeyPair(): nacl.BoxKeyPair {
     const cookieValue = this.cookieService.get('paysolcookie');
-    console.log(cookieValue);
     if(cookieValue)
     {
       const deserializedKeyPair = JSON.parse(cookieValue) as nacl.BoxKeyPair;
 
-      // Convert publicKey object to Uint8Array
       if (deserializedKeyPair.publicKey && typeof deserializedKeyPair.publicKey === 'object') {
         const publicKeyBytes = Object.values(deserializedKeyPair.publicKey);
         deserializedKeyPair.publicKey = new Uint8Array(publicKeyBytes);
@@ -31,14 +28,13 @@ export class CookiesService {
         const secretKeyBytes = Object.values(deserializedKeyPair.secretKey);
         deserializedKeyPair.secretKey = new Uint8Array(secretKeyBytes);
       }
-
-      console.log("type checker: " + typeof deserializedKeyPair.publicKey);
-      console.log("length: " + deserializedKeyPair.publicKey.length);
-      console.log("publickey: " +  deserializedKeyPair.publicKey);
       return deserializedKeyPair;
     }
-
     return null!;
   }
 
+  public deleteCookie(){
+    this.cookieService.deleteAll();
+    AppStaticGlobals.DisConnect();
+  }
 }

@@ -27,7 +27,7 @@ export class PhantomServiceService  {
   private _data: any;
   private _dappKeyPair = nacl.box.keyPair();
   // private _backToPaysol = `http://test.paysol.me/places/payements`;
-  private _backToPaysol = `http://192.168.178.157:8100/auth`;
+  private _backToPaysol = `http://192.168.1.69:8100/auth`;
   private _connection: Connection = new Connection("https://nd-471-114-142.p2pify.com/3a2a6e114f8bead3b52300fad0789a73",
     {wsEndpoint: "wss://ws-nd-471-114-142.p2pify.com/3a2a6e114f8bead3b52300fad0789a73"});
 
@@ -36,19 +36,15 @@ export class PhantomServiceService  {
 
   public decryptPayload = (data: string, nonce: string, sharedSecret: Uint8Array) : any => {
     if (!sharedSecret) throw new Error("missing shared secret");
-    if (!data) throw new Error("missing data");
-    if (!nonce) throw new Error("missing nonce");
     else{
       try{
         const decryptedData : Uint8Array = nacl.box.open.after(bs58.decode(data), bs58.decode(nonce), sharedSecret)!;
         return JSON.parse(Buffer.from(decryptedData).toString("utf8"));
       }
       catch (e) {
-        alert(e);
+        alert('yoyo: ' + e);
       }
     }
-
-
   };
 
   public encryptPayload = (payload: any, sharedSecret?: Uint8Array) => {
@@ -71,35 +67,22 @@ export class PhantomServiceService  {
       dappKeyPair
     );
   }
-
-  public getCookie() : nacl.BoxKeyPair | null {
-    return this.cookieSerive.getNaclBoxKeyPair();
-  }
-  public getDapKeyPairSecret(){
-    return this.getCookie()!.secretKey;
-  }
-
   private buildUrl (path: string, params: URLSearchParams) {
     return `phantom://v1/${path}?${params.toString()}`;
   };
 
   public async connect() {
     this.setCookie();
-    console.log("stap0");
     const params = new URLSearchParams({
-      dapp_encryption_public_key: bs58.encode(this.getCookie()!.publicKey), //hier gaat ie fout
+      dapp_encryption_public_key: bs58.encode(this.cookieSerive.getNaclBoxKeyPair().publicKey),
       cluster: 'mainnet-beta',
       app_url: 'https://phantom.app/',
       redirect_link: this._backToPaysol,
     });
 
-    console.log("stap1");
     const deepLink = this.buildUrl("connect", params);
-    try{
-      window.open(deepLink, '_top');
-    } catch (ex) {
-      console.log(ex);
-    }
+    alert('connected');
+    window.open(deepLink, '_top');
   }
 
   public signAndSendTransaction = async (amount: number, pub: string, con: number, nanoId: string) => {
@@ -121,7 +104,7 @@ export class PhantomServiceService  {
 
     const sharedSecretDapp = nacl.box.before(
       bs58.decode(this._phantom_encryption_public_key),
-      this.getCookie()!.secretKey
+      this.cookieSerive.getNaclBoxKeyPair().secretKey
     );
     const connectData: ConnectData = this.decryptPayload(this._data, this._nonce, sharedSecretDapp);
 
@@ -134,7 +117,7 @@ export class PhantomServiceService  {
     const backToPaysolTransactionStatus: string = `paysol://transactionstatus/amount/${amount}/pub/${pub}/con/${con}/nano/${nanoId}`;
 
     const paramsTransaction = new URLSearchParams({
-      dapp_encryption_public_key: bs58.encode(this.getCookie()!.publicKey),
+      dapp_encryption_public_key: bs58.encode(this.cookieSerive.getNaclBoxKeyPair().publicKey),
       nonce: bs58.encode(nonce),
       redirect_link: backToPaysolTransactionStatus,
       payload: bs58.encode(encryptedPayload),
@@ -165,7 +148,7 @@ export class PhantomServiceService  {
 
     const sharedSecretDapp = nacl.box.before(
       bs58.decode(this._phantom_encryption_public_key),
-      this.getDapKeyPairSecret()!
+      this.cookieSerive.getNaclBoxKeyPair().secretKey
     );
 
     this._data = AppStaticGlobals.Data;
@@ -213,7 +196,7 @@ export class PhantomServiceService  {
 
     const sharedSecretDapp = nacl.box.before(
       bs58.decode(this._phantom_encryption_public_key),
-      this.getDapKeyPairSecret()!
+      this.cookieSerive.getNaclBoxKeyPair().secretKey
     );
 
 

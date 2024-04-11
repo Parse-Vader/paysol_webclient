@@ -74,7 +74,7 @@ export class TransactionComponent {
     this.uniqueId = nanoid();
   }
   protected createDeeplink = (): string => `paysol://solsendertransaction/amount/${this.amount}/pub/${this.pubkey.toString()}/con/${this.contract}/nano/${this.uniqueId}`;
-  protected transferIdUrl = (): string => `https://paysol.me/tx?data=${this.uniqueId}`;
+  protected transferIdUrl = (): string => `https://app.paysol.me/tx?data=${this.uniqueId}`;
 
   async dismissModal() {
     await this._modalCtrl.dismiss(null, 'confirm');

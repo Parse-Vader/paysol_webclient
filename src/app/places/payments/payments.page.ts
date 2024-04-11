@@ -48,7 +48,7 @@ export class PaymentsPage implements OnInit {
 
   async ngOnInit() {
     var pubkey = AppStaticGlobals.pub_key;
-    const newTransactions = this.http.get<TransactionModel[]>(`https://paysol.me/api/transaction/${pubkey}`);
+    const newTransactions = this.http.get<TransactionModel[]>(`https://server.paysol.me/api/transaction/${pubkey}`);
     newTransactions.subscribe((data) => {
       if (data.length > 0) {
         this.transactions = [...this.transactions, ...data];

@@ -12,7 +12,7 @@ export class ClientRequestService {
 
   transferDeepLinkUrl(newTransaction: TransactionModel) {
 
-    this.http.post('https://paysol.me/api/transaction-handler', newTransaction)
+    this.http.post('https://server.paysol.me/api/transaction-handler', newTransaction)
       .subscribe({
         next: () => {
         },
@@ -22,6 +22,6 @@ export class ClientRequestService {
   }
 
   getTransactionData(txNanoId: string) : Observable<TransactionModel> {
-    return this.http.get<TransactionModel>(`https://paysol.me/api/paysoltx/${txNanoId}`);
+    return this.http.get<TransactionModel>(`https://server.paysol.me/api/paysoltx/${txNanoId}`);
   }
 }

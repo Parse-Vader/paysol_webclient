@@ -7,7 +7,12 @@ import {AppStaticGlobals} from "../../globals/AppStaticGlobals";
 import {Contract} from "../../interfaces/contract.enum";
 import type { IonModal } from '@ionic/angular';
 import { AnimationController } from '@ionic/angular';
-import {CurrencyPrice, ModalItem, RealtimeServerPriceService} from "../../services/realtime-server-price.service";
+import {
+  CurrencyPrice,
+  ModalItem,
+  RealtimeServerPriceService,
+  vsToken
+} from "../../services/realtime-server-price.service";
 
 @Component({
   selector: 'app-payments',
@@ -17,7 +22,7 @@ import {CurrencyPrice, ModalItem, RealtimeServerPriceService} from "../../servic
 export class PaymentsPage implements OnInit {
 
   @ViewChild('modal', { static: true }) modal!: IonModal;
-  isMultiSelectClicked: boolean = false;
+  selectedValuta: string = 'USD';
   transactions: TransactionModel[] = [];
   modalItems : ModalItem[] = []
 
@@ -41,6 +46,20 @@ export class PaymentsPage implements OnInit {
   setPrices(){
     this.modalItems = this.realtime.getUpdatedListOfModalItems();
   }
+  handleChange(e: any) {
+    console.log('ionChange fired with value: ' + e.detail.value);
+    this.selectedValuta = e.detail.value;
+    this.modalItems = this.realtime.changePrices(this.selectedValuta);
+  }
+
+  // handleCancel() {
+  //   console.log('ionCancel fired');
+  // }
+  //          (ionCancel)="handleCancel()"
+  //                 (ionDismiss)="handleDismiss()"
+  // handleDismiss() {
+  //   console.log('ionDismiss fired');
+  // }
   initModal(){
     const enterAnimation = (baseEl: HTMLElement) => {
       const root : ShadowRoot = baseEl.shadowRoot!;

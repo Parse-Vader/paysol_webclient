@@ -9,18 +9,18 @@ export interface CryptoPrice {
   vsTokenSymbol: string;
   price: number;
 }
+export interface ApiResponse {
+  data: {
+    [key: string]: CryptoPrice;
+  };
+  timeTaken: number;
+}
 export interface ModalItem {
   text: string;
   iconUrl: string;
   contract: Contract;
   priceId: CurrencyPrice
   price: number | null | string;
-}
-export interface ApiResponse {
-  data: {
-    [key: string]: CryptoPrice;
-  };
-  timeTaken: number;
 }
 @Injectable({
   providedIn: 'root'
@@ -51,12 +51,50 @@ export class RealtimeServerPriceService {
     this.setPricesInModalItems();
     return this.modalItems;
   }
+  changePrices(setter: string){
+    switch (setter) {
+      case 'USD':
+        this.setPricesInModalItems();
+        break;
+      case 'EUR':
+        this.setPricesInModalItems(vsToken.EURC);
+        break;
+      case 'SOL':
+        this.setPricesInModalItems(vsToken.SOL);
+        break;
+      case 'BTC':
+        this.setPricesInModalItems(vsToken.BTC);
+        break;
+      case 'ETH':
+        this.setPricesInModalItems(vsToken.ETH);
+        break;
+    }
+    return this.modalItems;
+  }
+
+  getStringValuta(vsToken: string){
+    switch (vsToken) {
+      case 'USDC':
+        return 'USD';
+      case 'EURC':
+        return 'EUR'
+      case 'SOL':
+        return 'SOL'
+      case 'WBTC':
+        return 'BTC';
+      case 'ETH':
+        return 'ETH';
+      default:
+        return '';
+    }
+  }
   async getAllPrices(getPrices: string[] = Object.values(CurrencyPrice), vsToken = 'USDC'): Promise<string[]> {
     try {
       const prices = await this.getCryptoPrices(getPrices, vsToken);
       return  prices.map((price, index) => {
         if (price !== null) {
-          return `1 ${getPrices[index]} costs ${price} ${vsToken}`;
+          // return `1 ${getPrices[index]} costs ${price} ${vsToken}`;
+          return `${price} ${this.getStringValuta(vsToken)}`;
         } else {
           return `Failed to retrieve price for ${getPrices[index]}.`;
         }
@@ -104,7 +142,8 @@ export class RealtimeServerPriceService {
     return this.getCryptoPrices([cryptoId], vsToken)
       .then(price => {
         if (price !== null) {
-          return `1 ${cryptoId} costs ${price} ${vsToken}`;
+          // return `1 ${cryptoId} costs ${price} ${vsToken}`;
+          return `${price} ${vsToken}`;
         } else {
           return 'Failed to retrieve price.';
         }
@@ -122,7 +161,7 @@ export enum CurrencyPrice {
   PYTH = 'PYTH',
   RAY = 'RAY',
   ORCA = 'ORCA',
-  WIF = 'WIF',
+  WIF = '$WIF',
   ROLLBIT = 'RLB',
   JITOSTAKEDSOL = 'JitoSOL',
   BTC = 'WBTC',

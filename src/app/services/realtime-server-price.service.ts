@@ -71,7 +71,6 @@ export class RealtimeServerPriceService {
     }
     return this.modalItems;
   }
-
   getStringValuta(vsToken: string){
     switch (vsToken) {
       case 'USDC':
@@ -93,7 +92,6 @@ export class RealtimeServerPriceService {
       const prices = await this.getCryptoPrices(getPrices, vsToken);
       return  prices.map((price, index) => {
         if (price !== null) {
-          // return `1 ${getPrices[index]} costs ${price} ${vsToken}`;
           return `${price} ${this.getStringValuta(vsToken)}`;
         } else {
           return `Failed to retrieve price for ${getPrices[index]}.`;

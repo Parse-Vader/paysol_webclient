@@ -16,6 +16,8 @@ export class PayComponent  implements OnInit {
   @Input() selectedValuta: string = '';
 
   protected isDisabled: boolean = false;
+  public isCalculating: boolean = false;
+
   public paymentFormGroup: FormGroup<PaymentFormGroup>;
   constructor(private _modalCtrl: ModalController,
               private toastController: ToastController,
@@ -38,21 +40,66 @@ export class PayComponent  implements OnInit {
   }
 
   ngOnInit() {
-    this.paymentFormGroup.valueChanges.subscribe( () => {
-      this.isDisabled = !this.paymentFormGroup.valid;
-    } );
-    this.paymentFormGroup.controls.crypto.valueChanges.subscribe( () => {
-      this.calculateAmountAndPrices(this.paymentFormGroup.controls.crypto.value!);
-    } )
-    this.paymentFormGroup.controls.amount.valueChanges.subscribe( () => {
-      this.calculateAmountAndPrices(this.paymentFormGroup.controls.amount.value!);
-    } )
+    this.paymentFormGroup.valueChanges.subscribe(() => {
+      if (!this.isCalculating) {
+        this.isDisabled = !this.paymentFormGroup.valid;
+      }
+    });
+
+    this.paymentFormGroup.controls.crypto.valueChanges.subscribe(() => {
+      if (!this.isCalculating) {
+        this.isCalculating = true;
+        this.calculateVsTokenInAmount(this.paymentFormGroup.controls.crypto.value!);
+        this.isCalculating = false;
+      }
+    });
+
+    this.paymentFormGroup.controls.amount.valueChanges.subscribe(() => {
+      if (!this.isCalculating) {
+        this.isCalculating = true;
+        this.calculateAmountInVsToken(this.paymentFormGroup.controls.amount.value!);
+        this.isCalculating = false;
+      }
+    });
   }
-  public calculateAmountAndPrices(amount: number, ){
-    console.log('test');
+
+  public async calculateAmountInVsToken(amount: number) {
+    const priceOfOneUnitOfReceivable = await this.realtimePrice.getTokenPrice(this.item.priceId, this.getStringVsToken(this.selectedValuta));
+    const priceOfCalculation = priceOfOneUnitOfReceivable * amount;
+    this.isCalculating = true;
+    this.paymentFormGroup.controls.crypto.setValue(priceOfCalculation);
+    this.isCalculating = false;
   }
+
+  public async calculateVsTokenInAmount(amount: number) {
+    const priceOfOneUnitOfReceivable = await this.realtimePrice.getTokenPrice(this.item.priceId, this.getStringVsToken(this.selectedValuta));
+    const priceOfCalculation = amount / priceOfOneUnitOfReceivable;
+    this.isCalculating = true;
+    this.paymentFormGroup.controls.amount.setValue(priceOfCalculation);
+    this.isCalculating = false;
+  }
+
+  getStringVsToken(valuta: string){
+    switch (valuta) {
+      case 'USD':
+        return 'USDC';
+      case 'EUR':
+        return 'EURC'
+      case 'SOL':
+        return 'SOL'
+      case 'BTC':
+        return 'WBTC';
+      case 'ETH':
+        return 'ETH';
+      default:
+        return '';
+    }
+  }
+
   public handleChange(e: any) {
     this.selectedValuta = e.detail.value;
+    this.calculateVsTokenInAmount(this.paymentFormGroup.controls.crypto.value!);
+
   }
 
   public cancel():void {

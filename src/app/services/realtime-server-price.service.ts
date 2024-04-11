@@ -102,7 +102,7 @@ export class RealtimeServerPriceService {
       throw error;
     }
   }
-  async getCryptoPrices(cryptoIds: string[], vsToken: string): Promise<(number | null | string)[]> {
+  async getCryptoPrices(cryptoIds: string[], vsToken: string): Promise<(number | null )[]> {
     const params = new HttpParams().set('ids', cryptoIds.join(',')).set('vsToken', vsToken);
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     try {
@@ -114,7 +114,7 @@ export class RealtimeServerPriceService {
           })
         )
       );
-      return cryptoIds.map(cryptoId => response.data[cryptoId]?.price ?? 'N/A');
+      return cryptoIds.map(cryptoId => response.data[cryptoId]?.price ?? undefined );
     } catch (error) {
       console.error('Error in getCryptoPrices:', error);
       throw error;
@@ -136,14 +136,14 @@ export class RealtimeServerPriceService {
       console.error('Error in setPricesInModalItems:', error);
     }
   }
-  async getTokenPrice(cryptoId: string, vsToken: string = 'USDC') : Promise<string> {
+  async getTokenPrice(cryptoId: string, vsToken: string = 'USDC') : Promise<number> {
     return this.getCryptoPrices([cryptoId], vsToken)
       .then(price => {
         if (price !== null) {
-          // return `1 ${cryptoId} costs ${price} ${vsToken}`;
-          return `${price} ${vsToken}`;
+          // return `${price} ${vsToken}`;
+          return price[0]!;
         } else {
-          return 'Failed to retrieve price.';
+          return 0;
         }
       });
   }

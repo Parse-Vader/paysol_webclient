@@ -130,7 +130,6 @@ export class PayComponent  implements OnInit {
         contract: this.item.contract
       }
     });
-
     modalTransaction.present();
 
     modalTransaction.onDidDismiss().then(resultData => {
@@ -149,5 +148,4 @@ export class PayComponent  implements OnInit {
 
     await toast.present();
   }
-
 }

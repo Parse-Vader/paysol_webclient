@@ -9,7 +9,6 @@ export interface CryptoPrice {
   vsTokenSymbol: string;
   price: number;
 }
-
 export interface ModalItem {
   text: string;
   iconUrl: string;
@@ -17,14 +16,12 @@ export interface ModalItem {
   priceId: CurrencyPrice
   price: number | null | string;
 }
-
 export interface ApiResponse {
   data: {
     [key: string]: CryptoPrice;
   };
   timeTaken: number;
 }
-
 @Injectable({
   providedIn: 'root'
 })
@@ -50,7 +47,6 @@ export class RealtimeServerPriceService {
     { text: 'MARINADESTAKEDSOL', iconUrl: 'assets/icon/msol.svg', contract: Contract.MARINADESTAKEDSOL, priceId: CurrencyPrice.MARINADESTAKEDSOL, price: null }
   ];
   constructor(private http: HttpClient) { }
-
   getUpdatedListOfModalItems(){
     this.setPricesInModalItems();
     return this.modalItems;
@@ -58,29 +54,21 @@ export class RealtimeServerPriceService {
   async getAllPrices(getPrices: string[] = Object.values(CurrencyPrice), vsToken = 'USDC'): Promise<string[]> {
     try {
       const prices = await this.getCryptoPrices(getPrices, vsToken);
-
-      const formattedPrices = prices.map((price, index) => {
+      return  prices.map((price, index) => {
         if (price !== null) {
-          const formattedPrice = `1 ${getPrices[index]} costs ${price} ${vsToken}`;
-
-          return formattedPrice;
+          return `1 ${getPrices[index]} costs ${price} ${vsToken}`;
         } else {
-          const errorMessage = `Failed to retrieve price for ${getPrices[index]}.`;
-          return errorMessage;
+          return `Failed to retrieve price for ${getPrices[index]}.`;
         }
       });
-
-      return formattedPrices;
     } catch (error) {
       console.error('Error in funcArray:', error);
       throw error;
     }
   }
-
   async getCryptoPrices(cryptoIds: string[], vsToken: string): Promise<(number | null | string)[]> {
     const params = new HttpParams().set('ids', cryptoIds.join(',')).set('vsToken', vsToken);
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-
     try {
       const response = await firstValueFrom(
         this.http.get<ApiResponse>(this.baseUrl, { headers, params }).pipe(
@@ -90,16 +78,12 @@ export class RealtimeServerPriceService {
           })
         )
       );
-
-      const prices: (number | null | string)[] = cryptoIds.map(cryptoId => response.data[cryptoId]?.price ?? 'N/A');
-      return prices;
+      return cryptoIds.map(cryptoId => response.data[cryptoId]?.price ?? 'N/A');
     } catch (error) {
       console.error('Error in getCryptoPrices:', error);
       throw error;
     }
   }
-
-
   async setPricesInModalItems(vsTokenprice: string = 'USDC'): Promise<void> {
     try {
       const prices = await this.getAllPrices(Object.values(CurrencyPrice), vsTokenprice);
@@ -117,7 +101,6 @@ export class RealtimeServerPriceService {
     }
   }
   async getTokenPrice(cryptoId: string, vsToken: string = 'USDC') : Promise<string> {
-
     return this.getCryptoPrices([cryptoId], vsToken)
       .then(price => {
         if (price !== null) {

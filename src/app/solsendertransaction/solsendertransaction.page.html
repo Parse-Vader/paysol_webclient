@@ -1,10 +1,22 @@
-<ion-content class="ion-padding" style="height: 100vh;">
-  <ion-grid style="height: 100%;">
-    <ion-row style="height: 100%;">
-      <ion-col size="12" style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
-        <ion-button (click)="makeTransaction()">Send {{amount}} {{nameContranct}}</ion-button>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
-</ion-content>
-
+<div style="display: flex; justify-content: center; align-items: center; height: 90vh;">
+  <ion-card style="display: flex; justify-content: center; align-items: center; height: 35vh; border-radius: 25px">
+    <div style="padding: 20px; border-radius: 35px; background-color: #1E1E1E; ">
+      <img src="assets/images/Paysol_bw.png" alt="Logo" class="logo_small" style="width: 240px; height: auto; margin-left: 26px;">
+      <ion-grid>
+        <ion-row>
+          <ion-col size="12" style="display: flex; flex-direction: column; align-items: center;">
+            <ion-button (click)="makeTransaction()" style="width: 50%">Send {{amount}} {{nameContranct}}</ion-button>
+          </ion-col>
+          <ion-card style="background-color: #181818; border-radius: 10px; margin-left: 40px; padding: 5px">
+            <ion-col size="12" style="display: flex; flex-direction: column; align-items: center;">
+              <ion-text>Transaction Receiver:</ion-text>
+            </ion-col>
+            <ion-col size="12" style="display: flex; flex-direction: column; align-items: center;">
+              <ion-text>{{receiverAddress}}</ion-text>
+            </ion-col>
+          </ion-card>
+        </ion-row>
+      </ion-grid>
+    </div>
+  </ion-card>
+</div>

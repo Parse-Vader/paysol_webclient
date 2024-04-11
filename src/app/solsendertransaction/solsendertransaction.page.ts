@@ -21,6 +21,7 @@ export class SolsendertransactionPage implements OnInit {
   public nano: string = '';
   public nameContranct: string = '';
   public transaction: TransactionModel = {id: "", contract: 0, message: "", amount: 0, sender: '', receiver: '', finalised: false, deepLink: '', date: new Date()};
+  public receiverAddress: string = '';
   constructor(private route: ActivatedRoute,
               private _phantom: PhantomServiceService,
               private _modalCtrl: ModalController,
@@ -52,6 +53,7 @@ export class SolsendertransactionPage implements OnInit {
         this.nano = data.id;
         this.nameContranct = this.getContractName(this.contract as Contract);
         this.key = this.grabKey(data.deepLink);
+        this.receiverAddress = this.key;
 
 
       },

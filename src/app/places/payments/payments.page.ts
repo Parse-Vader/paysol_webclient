@@ -47,19 +47,10 @@ export class PaymentsPage implements OnInit {
     this.modalItems = this.realtime.getUpdatedListOfModalItems();
   }
   handleChange(e: any) {
-    console.log('ionChange fired with value: ' + e.detail.value);
     this.selectedValuta = e.detail.value;
     this.modalItems = this.realtime.changePrices(this.selectedValuta);
   }
 
-  // handleCancel() {
-  //   console.log('ionCancel fired');
-  // }
-  //          (ionCancel)="handleCancel()"
-  //                 (ionDismiss)="handleDismiss()"
-  // handleDismiss() {
-  //   console.log('ionDismiss fired');
-  // }
   initModal(){
     const enterAnimation = (baseEl: HTMLElement) => {
       const root : ShadowRoot = baseEl.shadowRoot!;
@@ -108,7 +99,8 @@ export class PaymentsPage implements OnInit {
     this._modalCtrl.create({
       component: PayComponent,
       componentProps: {
-        item: item
+        item: item,
+        selectedValuta: this.selectedValuta
       }
     }).then(modalEl => {
       modalEl.present();

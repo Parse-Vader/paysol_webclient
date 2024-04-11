@@ -7,7 +7,6 @@ import * as bs58 from "bs58";
 import { ConnectData } from "../interfaces/connect.data";
 import {CookiesService} from "../services/cookies.service";
 import {RealtimeServerPriceService} from "../services/realtime-server-price.service";
-
 @Component({
   selector: 'app-auth',
   templateUrl: './auth.page.html',

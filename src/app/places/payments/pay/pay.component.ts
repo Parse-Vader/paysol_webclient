@@ -4,7 +4,7 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {TransactionComponent} from './transaction/transaction.component';
 import {PaymentFormGroup} from "../../../interfaces/paymentFormGroup";
 import {Contract} from "../../../interfaces/contract.enum";
-import {CurrencyPrice, ModalItem} from "../../../services/realtime-server-price.service";
+import {CurrencyPrice, ModalItem, RealtimeServerPriceService} from "../../../services/realtime-server-price.service";
 
 @Component({
   selector: 'app-pay',
@@ -13,16 +13,22 @@ import {CurrencyPrice, ModalItem} from "../../../services/realtime-server-price.
 })
 export class PayComponent  implements OnInit {
   @Input() item: ModalItem = { text: 'Solana', iconUrl: 'assets/icon/solanaLogoMark.svg', contract: Contract.SOL, priceId: CurrencyPrice.SOL, price: null };
+  @Input() selectedValuta: string = '';
 
   protected isDisabled: boolean = false;
   public paymentFormGroup: FormGroup<PaymentFormGroup>;
   constructor(private _modalCtrl: ModalController,
               private toastController: ToastController,
+              private realtimePrice: RealtimeServerPriceService
   ) {
     this.paymentFormGroup = new FormGroup<PaymentFormGroup>({
       amount: new FormControl<number | null>( null, {
         updateOn: 'blur',
-        validators: [Validators.required, Validators.min(0.001)]
+        validators: [Validators.required, Validators.min(0.0001)]
+      }),
+      crypto: new FormControl<number | null>( null, {
+        updateOn: 'blur',
+        validators: [ Validators.min(0.0001)]
       }),
       reason: new FormControl<string | null>('', {
         updateOn: 'blur',
@@ -34,7 +40,19 @@ export class PayComponent  implements OnInit {
   ngOnInit() {
     this.paymentFormGroup.valueChanges.subscribe( () => {
       this.isDisabled = !this.paymentFormGroup.valid;
+    } );
+    this.paymentFormGroup.controls.crypto.valueChanges.subscribe( () => {
+      this.calculateAmountAndPrices(this.paymentFormGroup.controls.crypto.value!);
     } )
+    this.paymentFormGroup.controls.amount.valueChanges.subscribe( () => {
+      this.calculateAmountAndPrices(this.paymentFormGroup.controls.amount.value!);
+    } )
+  }
+  public calculateAmountAndPrices(amount: number, ){
+    console.log('test');
+  }
+  public handleChange(e: any) {
+    this.selectedValuta = e.detail.value;
   }
 
   public cancel():void {

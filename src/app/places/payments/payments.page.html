@@ -34,10 +34,10 @@
     <ng-template>
       <ion-header>
         <ion-toolbar>
-          <ion-title>Select a coin</ion-title>
+          <ion-title class="left-title">Select a coin</ion-title>
           <ion-list slot="end">
             <ion-item>
-              <ion-select aria-label="valuta" placeholder="{{selectedValuta}}"
+              <ion-select aria-label="valuta1" interface="action-sheet" placeholder="{{selectedValuta}}"
                 (ionChange)="handleChange($event)"
               >
                 <ion-select-option value="USD">USD</ion-select-option>

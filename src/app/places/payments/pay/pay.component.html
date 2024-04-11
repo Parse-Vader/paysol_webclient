@@ -7,9 +7,19 @@
     </ion-buttons>
     <ion-title>New Transaction</ion-title>
     <ion-buttons slot="primary">
-      <ion-button (click)="confirm()" [disabled]="!paymentFormGroup.valid">
-        <ion-icon  name="checkmark" slot="icon-only" ></ion-icon>
-      </ion-button>
+      <ion-list slot="end">
+        <ion-item>
+          <ion-select aria-label="valuta" interface="action-sheet" placeholder="{{selectedValuta}}"
+              (ionChange)="handleChange($event)"
+          >
+            <ion-select-option value="USD">USD</ion-select-option>
+            <ion-select-option value="EUR">EUR</ion-select-option>
+            <ion-select-option value="SOL">SOL</ion-select-option>
+            <ion-select-option value="BTC">BTC</ion-select-option>
+            <ion-select-option value="ETH">ETH</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-list>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -22,13 +32,23 @@
         <ion-label>{{ item.text }}</ion-label>
         <ion-icon slot="start" [src]="item.iconUrl"></ion-icon>
       </ion-item>
-      <ion-item>
-        <ion-label position="stacked">Enter amount</ion-label>
-        <ion-input
-          formControlName="amount"
-          type="number"
-          placeholder="0,00"></ion-input>
-      </ion-item>
+      <ion-row>
+        <ion-col size="6">
+          <ion-item>
+            <ion-label position="stacked">Enter amount</ion-label>
+            <ion-input formControlName="amount" type="number" placeholder="0,00"></ion-input>
+          </ion-item>
+        </ion-col>
+
+        <ion-col size="6">
+          <ion-item>
+            <ion-label position="stacked">{{this.selectedValuta + ' calc.'}}</ion-label>
+            <ion-input formControlName="crypto" type="number" placeholder="0,00"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+
       <ion-row *ngIf="!paymentFormGroup.get('amount')?.valid && paymentFormGroup.get('amount')?.touched">
         <ion-col size-sm="6" offset-sm="3">
           <p>Amount must be higher than 0,001. </p>
@@ -51,4 +71,11 @@
 
     </ion-list>
   </form>
+  <ion-footer>
+    <ion-toolbar>
+      <ion-button expand="block" (click)="confirm()" [disabled]="!paymentFormGroup.valid"><strong>Send link</strong></ion-button>
+    </ion-toolbar>
+  </ion-footer>
 </ion-content>
+
+

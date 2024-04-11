@@ -46,6 +46,7 @@
           <ion-item *ngFor="let item of modalItems" (click)="onSelectedCoinClick(item)">
             <ion-label>{{ item.text }}</ion-label>
             <ion-icon slot="start" [src]="item.iconUrl"></ion-icon>
+            <ion-label slot="end">{{item.price}}</ion-label>
           </ion-item>
         </ion-list>
 
@@ -56,6 +57,6 @@
 
 <ion-footer>
   <ion-toolbar>
-    <ion-button id="modal-trigger" expand="block"><strong>Create transfer request</strong></ion-button>
+    <ion-button id="modal-trigger" (click)="setPrices()" expand="block"><strong>Create transfer request</strong></ion-button>
   </ion-toolbar>
 </ion-footer>

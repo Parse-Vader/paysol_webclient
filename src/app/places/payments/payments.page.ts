@@ -7,12 +7,8 @@ import {AppStaticGlobals} from "../../globals/AppStaticGlobals";
 import {Contract} from "../../interfaces/contract.enum";
 import type { IonModal } from '@ionic/angular';
 import { AnimationController } from '@ionic/angular';
+import {CurrencyPrice, ModalItem, RealtimeServerPriceService} from "../../services/realtime-server-price.service";
 
-export interface ModalItem {
-  text: string;
-  iconUrl: string;
-  contract: Contract
-}
 @Component({
   selector: 'app-payments',
   templateUrl: './payments.page.html',
@@ -21,30 +17,14 @@ export interface ModalItem {
 export class PaymentsPage implements OnInit {
 
   @ViewChild('modal', { static: true }) modal!: IonModal;
+  isMultiSelectClicked: boolean = false;
   transactions: TransactionModel[] = [];
-  modalItems : ModalItem[] = [
-    { text: 'Solana', iconUrl: 'assets/icon/solanaLogoMark.svg', contract: Contract.SOL },
-    { text: 'USDC', iconUrl: 'assets/icon/usd-coin-usdc-logo.svg', contract: Contract.USDC },
-    { text: 'EURC', iconUrl: 'assets/icon/euro.svg', contract: Contract.EURC },
-    { text: 'USDT', iconUrl: 'assets/icon/usdt.svg', contract: Contract.USDT },
-    { text: 'MYRO', iconUrl: 'assets/icon/myro.svg', contract: Contract.MYRO },
-    { text: 'JUP', iconUrl: 'assets/icon/jup.svg', contract: Contract.JUP },
-    { text: 'RNDR', iconUrl: 'assets/icon/rndr.svg', contract: Contract.RNDR },
-    { text: 'PYTH', iconUrl: 'assets/icon/pyth.svg', contract: Contract.PYTH },
-    { text: 'RAY', iconUrl: 'assets/icon/ray.svg', contract: Contract.RAY },
-    { text: 'ORCA', iconUrl: 'assets/icon/orca.svg', contract: Contract.ORCA },
-    { text: 'WIF', iconUrl: 'assets/icon/wif.svg', contract: Contract.WIF },
-    { text: 'ROLLBIT', iconUrl: 'assets/icon/rollbit.svg', contract: Contract.ROLLBIT },
-    { text: 'JITOSTAKEDSOL', iconUrl: 'assets/icon/jito.svg', contract: Contract.JITOSTAKEDSOL },
-    { text: 'WBTC', iconUrl: 'assets/icon/wbtc.svg', contract: Contract.WBTC },
-    { text: 'SLERF', iconUrl: 'assets/icon/slerf.svg', contract: Contract.SLERF },
-    { text: 'BONK', iconUrl: 'assets/icon/bonk.svg', contract: Contract.BONK },
-    { text: 'MARINADESTAKEDSOL', iconUrl: 'assets/icon/msol.svg', contract: Contract.MARINADESTAKEDSOL }
-  ];
+  modalItems : ModalItem[] = []
+
 
   protected readonly Contract = Contract;
 
-  constructor(private _modalCtrl: ModalController, private http: HttpClient,private animationCtrl: AnimationController) { }
+  constructor(private _modalCtrl: ModalController, private http: HttpClient,private animationCtrl: AnimationController, private realtime: RealtimeServerPriceService) { }
 
   async ngOnInit() {
     var pubkey = AppStaticGlobals.pub_key;
@@ -56,6 +36,10 @@ export class PaymentsPage implements OnInit {
     });
 
     this.initModal();
+  }
+
+  setPrices(){
+    this.modalItems = this.realtime.getUpdatedListOfModalItems();
   }
   initModal(){
     const enterAnimation = (baseEl: HTMLElement) => {

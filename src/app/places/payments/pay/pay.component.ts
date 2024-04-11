@@ -4,7 +4,7 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {TransactionComponent} from './transaction/transaction.component';
 import {PaymentFormGroup} from "../../../interfaces/paymentFormGroup";
 import {Contract} from "../../../interfaces/contract.enum";
-import {ModalItem} from "../payments.page";
+import {CurrencyPrice, ModalItem} from "../../../services/realtime-server-price.service";
 
 @Component({
   selector: 'app-pay',
@@ -12,7 +12,7 @@ import {ModalItem} from "../payments.page";
   styleUrls: ['./pay.component.scss'],
 })
 export class PayComponent  implements OnInit {
-  @Input() item: ModalItem = { text: 'Solana', iconUrl: 'assets/icon/solanaLogoMark.svg', contract: Contract.SOL };
+  @Input() item: ModalItem = { text: 'Solana', iconUrl: 'assets/icon/solanaLogoMark.svg', contract: Contract.SOL, priceId: CurrencyPrice.SOL, price: null };
 
   protected isDisabled: boolean = false;
   public paymentFormGroup: FormGroup<PaymentFormGroup>;

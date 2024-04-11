@@ -1,44 +1,159 @@
 import { Injectable } from '@angular/core';
-import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
-import {firstValueFrom} from "rxjs";
-import {TransactionModel} from "../interfaces/transaction.model";
-
-interface PriceResponse {
-  [currency: string]: { [key: string]: number };
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
+import {catchError, firstValueFrom} from "rxjs";
+import {Contract} from "../interfaces/contract.enum";
+export interface CryptoPrice {
+  id: string;
+  mintSymbol: string;
+  vsToken: string;
+  vsTokenSymbol: string;
+  price: number;
 }
+
+export interface ModalItem {
+  text: string;
+  iconUrl: string;
+  contract: Contract;
+  priceId: CurrencyPrice
+  price: number | null | string;
+}
+
+export interface ApiResponse {
+  data: {
+    [key: string]: CryptoPrice;
+  };
+  timeTaken: number;
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class RealtimeServerPriceService {
   private baseUrl = 'https://price.jup.ag/v4/price';
+  private modalItems : ModalItem[] = [
+    { text: 'Solana', iconUrl: 'assets/icon/solanaLogoMark.svg', contract: Contract.SOL, priceId: CurrencyPrice.SOL, price: null },
+    { text: 'USDC', iconUrl: 'assets/icon/usd-coin-usdc-logo.svg', contract: Contract.USDC, priceId: CurrencyPrice.USDC, price: null },
+    { text: 'EURC', iconUrl: 'assets/icon/euro.svg', contract: Contract.EURC, priceId: CurrencyPrice.EURC, price: null },
+    { text: 'USDT', iconUrl: 'assets/icon/usdt.svg', contract: Contract.USDT, priceId: CurrencyPrice.USDC, price: null },
+    { text: 'MYRO', iconUrl: 'assets/icon/myro.svg', contract: Contract.MYRO, priceId: CurrencyPrice.MYRO, price: null },
+    { text: 'JUP', iconUrl: 'assets/icon/jup.svg', contract: Contract.JUP, priceId: CurrencyPrice.JUP, price: null },
+    { text: 'RNDR', iconUrl: 'assets/icon/rndr.svg', contract: Contract.RNDR, priceId: CurrencyPrice.RNDR, price: null },
+    { text: 'PYTH', iconUrl: 'assets/icon/pyth.svg', contract: Contract.PYTH, priceId: CurrencyPrice.PYTH, price: null },
+    { text: 'RAY', iconUrl: 'assets/icon/ray.svg', contract: Contract.RAY, priceId: CurrencyPrice.RAY, price: null },
+    { text: 'ORCA', iconUrl: 'assets/icon/orca.svg', contract: Contract.ORCA, priceId: CurrencyPrice.ORCA, price: null },
+    { text: 'WIF', iconUrl: 'assets/icon/wif.svg', contract: Contract.WIF, priceId: CurrencyPrice.WIF, price: null },
+    { text: 'ROLLBIT', iconUrl: 'assets/icon/rollbit.svg', contract: Contract.ROLLBIT, priceId: CurrencyPrice.ROLLBIT, price: null },
+    { text: 'JITOSTAKEDSOL', iconUrl: 'assets/icon/jito.svg', contract: Contract.JITOSTAKEDSOL, priceId: CurrencyPrice.JITOSTAKEDSOL, price: null },
+    { text: 'WBTC', iconUrl: 'assets/icon/wbtc.svg', contract: Contract.WBTC, priceId: CurrencyPrice.BTC, price: null },
+    { text: 'SLERF', iconUrl: 'assets/icon/slerf.svg', contract: Contract.SLERF, priceId: CurrencyPrice.SLERF, price: null },
+    { text: 'BONK', iconUrl: 'assets/icon/bonk.svg', contract: Contract.BONK, priceId: CurrencyPrice.BONK, price: null },
+    { text: 'MARINADESTAKEDSOL', iconUrl: 'assets/icon/msol.svg', contract: Contract.MARINADESTAKEDSOL, priceId: CurrencyPrice.MARINADESTAKEDSOL, price: null }
+  ];
+  constructor(private http: HttpClient) { }
 
-  constructor(private http: HttpClient) {}
-  async getCryptoPrice(cryptoId: string, vsToken: string): Promise<number | null> {
-    const params = {ids: cryptoId, vsToken};
-    const headers = new HttpHeaders({'Content-Type': 'application/json'});
-
+  getUpdatedListOfModalItems(){
+    this.setPricesInModalItems();
+    return this.modalItems;
+  }
+  async getAllPrices(getPrices: string[] = Object.values(CurrencyPrice), vsToken = 'USDC'): Promise<string[]> {
     try {
-      const response = await this.http.get<PriceResponse>(this.baseUrl, {headers, params});
-      return response[cryptoId]['price'];
+      const prices = await this.getCryptoPrices(getPrices, vsToken);
+
+      const formattedPrices = prices.map((price, index) => {
+        if (price !== null) {
+          const formattedPrice = `1 ${getPrices[index]} costs ${price} ${vsToken}`;
+
+          return formattedPrice;
+        } else {
+          const errorMessage = `Failed to retrieve price for ${getPrices[index]}.`;
+          return errorMessage;
+        }
+      });
+
+      return formattedPrices;
     } catch (error) {
-      console.error('Error fetching price:', error);
-      return null;
+      console.error('Error in funcArray:', error);
+      throw error;
     }
   }
 
-  func(){
-    const cryptoId = 'BTC';
-    const vsToken = 'ETH';
+  async getCryptoPrices(cryptoIds: string[], vsToken: string): Promise<(number | null | string)[]> {
+    const params = new HttpParams().set('ids', cryptoIds.join(',')).set('vsToken', vsToken);
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 
-    this.getCryptoPrice( cryptoId, vsToken)
-      .then(price => {
-        if (price) {
-          console.log(`1 ${cryptoId} costs ${price} ${vsToken}`);
-        } else {
-          console.error('Failed to retrieve price.');
-        }
-      });
+    try {
+      const response = await firstValueFrom(
+        this.http.get<ApiResponse>(this.baseUrl, { headers, params }).pipe(
+          catchError((error) => {
+            console.error('Error fetching prices:', error);
+            throw error;
+          })
+        )
+      );
+
+      const prices: (number | null | string)[] = cryptoIds.map(cryptoId => response.data[cryptoId]?.price ?? 'N/A');
+      return prices;
+    } catch (error) {
+      console.error('Error in getCryptoPrices:', error);
+      throw error;
+    }
   }
 
 
+  async setPricesInModalItems(vsTokenprice: string = 'USDC'): Promise<void> {
+    try {
+      const prices = await this.getAllPrices(Object.values(CurrencyPrice), vsTokenprice);
+
+      this.modalItems.forEach((item) => {
+        const priceIndex = Object.values(CurrencyPrice).indexOf(item.priceId);
+        if (priceIndex !== -1) {
+          item.price = prices[priceIndex];
+        } else {
+          item.price = null;
+        }
+      });
+    } catch (error) {
+      console.error('Error in setPricesInModalItems:', error);
+    }
+  }
+  async getTokenPrice(cryptoId: string, vsToken: string = 'USDC') : Promise<string> {
+
+    return this.getCryptoPrices([cryptoId], vsToken)
+      .then(price => {
+        if (price !== null) {
+          return `1 ${cryptoId} costs ${price} ${vsToken}`;
+        } else {
+          return 'Failed to retrieve price.';
+        }
+      });
+  }
 }
+export enum CurrencyPrice {
+  SOL = 'SOL',
+  USDC = 'USDC',
+  EURC = 'EURC',
+  USDT = 'USDT',
+  MYRO = '$MYRO',
+  JUP = 'JUP',
+  RNDR = 'RENDER',
+  PYTH = 'PYTH',
+  RAY = 'RAY',
+  ORCA = 'ORCA',
+  WIF = 'WIF',
+  ROLLBIT = 'RLB',
+  JITOSTAKEDSOL = 'JitoSOL',
+  BTC = 'WBTC',
+  SLERF = 'SLERF',
+  BONK = 'Bonk',
+  MARINADESTAKEDSOL = 'mSOL',
+}
+export enum vsToken{
+  USDC = 'USDC',
+  EURC = 'EURC',
+  ETH = 'ETH',
+  BTC = 'WBTC',
+  SOL = 'SOL'
+}
+
+
+

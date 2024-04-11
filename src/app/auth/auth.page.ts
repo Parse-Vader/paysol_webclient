@@ -1,11 +1,12 @@
 import { ActivatedRoute, Router } from "@angular/router";
 import { PhantomServiceService } from "../services/phantom-service.service";
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import { AppStaticGlobals } from "../globals/AppStaticGlobals";
 import * as nacl from "tweetnacl";
 import * as bs58 from "bs58";
 import { ConnectData } from "../interfaces/connect.data";
 import {CookiesService} from "../services/cookies.service";
+import {RealtimeServerPriceService} from "../services/realtime-server-price.service";
 
 @Component({
   selector: 'app-auth',
@@ -13,10 +14,21 @@ import {CookiesService} from "../services/cookies.service";
   styleUrls: ['./auth.page.scss'],
 })
 
-export class AuthPage {
+export class AuthPage implements OnInit {
   public link: string = '';
   public showSpinner: boolean = true;
-  constructor(private _phantomService: PhantomServiceService, private _route: ActivatedRoute, private _router: Router, private cookie: CookiesService) { }
+  public response: string = '';
+
+  constructor(private _phantomService: PhantomServiceService,
+              private _route: ActivatedRoute,
+              private _router: Router,
+              private cookie: CookiesService,
+              private _realtime: RealtimeServerPriceService
+              ) { }
+
+  async ngOnInit() {
+    // this.response = await this._realtime.funcArray();
+  }
 
   connectIsClicked()
   {

@@ -85,7 +85,6 @@ export class PhantomServiceService  {
 
   public async connect() {
     this.setCookie();
-    console.log("stap0");
     const params = new URLSearchParams({
       dapp_encryption_public_key: bs58.encode(this.getCookie()!.publicKey), //hier gaat ie fout
       cluster: 'mainnet-beta',
@@ -93,12 +92,10 @@ export class PhantomServiceService  {
       redirect_link: this._backToPaysol,
     });
 
-    console.log("stap1");
     const deepLink = this.buildUrl("connect", params);
     try{
       window.open(deepLink, '_top');
     } catch (ex) {
-      console.log(ex);
     }
   }
 

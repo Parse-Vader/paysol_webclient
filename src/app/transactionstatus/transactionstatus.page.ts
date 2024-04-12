@@ -29,11 +29,8 @@ export class TransactionstatusPage implements OnInit {
   ngOnInit() {
     this._route.queryParams.subscribe(params => {
       if (params['errorCode'] || params['errorMessage']) {
-        console.log("statusPage");
         this.isCanceled = true;
-        alert("transaction is canceled" + this.isCanceled);
       } else {
-        console.log('No public key found');
       }
     });
 

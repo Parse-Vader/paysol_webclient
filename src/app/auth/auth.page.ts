@@ -21,7 +21,6 @@ export class AuthPage implements OnInit {
     this._route.queryParams.subscribe(params => {
       const paramsLength = Object.keys(params).length;
       if (params['phantom_encryption_public_key'] || AppStaticGlobals.phantom_encryption_public_key !== "") {
-        console.log("Does enter");
         this.handleResponse(params);
       }
     });
@@ -32,10 +31,8 @@ export class AuthPage implements OnInit {
     this._route.queryParams.subscribe(params => {
       const paramsLength = Object.keys(params).length;
       if (params['phantom_encryption_public_key'] || AppStaticGlobals.phantom_encryption_public_key !== "") {
-        console.log("Does enter");
         this.handleResponse(params);
       } else {
-        console.log('No public key found');
         this.Connect();
       }
     });

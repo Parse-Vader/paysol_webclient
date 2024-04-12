@@ -23,7 +23,6 @@ export class CookiesService {
   }
   public getNaclBoxKeyPair(): nacl.BoxKeyPair {
     const cookieValue = this.cookieService.get('paysolcookie');
-    console.log(cookieValue);
     if(cookieValue)
     {
       const deserializedKeyPair = JSON.parse(cookieValue) as nacl.BoxKeyPair;
@@ -39,9 +38,6 @@ export class CookiesService {
         deserializedKeyPair.secretKey = new Uint8Array(secretKeyBytes);
       }
 
-      console.log("type checker: " + typeof deserializedKeyPair.publicKey);
-      console.log("length: " + deserializedKeyPair.publicKey.length);
-      console.log("publickey: " +  deserializedKeyPair.publicKey);
       return deserializedKeyPair;
     }
 

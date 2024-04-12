@@ -6,6 +6,7 @@ import {TransactionModel} from "../interfaces/transaction.model";
 import {AppStaticGlobals} from "../globals/AppStaticGlobals";
 import {ClientRequestService} from "../services/client-request.service";
 import {CookiesService} from "../services/cookies.service";
+
 @Component({
   selector: 'app-transactionstatus',
   templateUrl: './transactionstatus.page.html',
@@ -18,21 +19,25 @@ export class TransactionstatusPage implements OnInit {
   public nano: string = '';
   public nameContranct: string = '';
   public transaction: TransactionModel = {id: "", contract: 0, message: "", amount: 0, sender: '', receiver: '', finalised: false, deepLink: '', date: new Date()};
+  public isCanceled: boolean = false;
   constructor(private route: ActivatedRoute,
               private _modalCtrl: ModalController,
               private _clientRequest: ClientRequestService,
               private _router: Router,
-              private _cookieService: CookiesService) { }
+              private _cookieService: CookiesService,
+              private _route: ActivatedRoute) { }
   ngOnInit() {
-    // this.route.queryParams.subscribe(params => {
-    //   this.key = params['key'];
-    //   this.amount = params['amount'];
-    //   this.contract = params['contract'];
-    //   this.nano = params['nano'];
-    // });
-    // this.contract = this.getContractName(parseFloat(this.amount))
-    AppStaticGlobals.txNanoId = this._cookieService.getTxNanoIdCookie();
+    this._route.queryParams.subscribe(params => {
+      if (params['errorCode'] || params['errorMessage']) {
+        console.log("statusPage");
+        this.isCanceled = true;
+        alert("transaction is canceled" + this.isCanceled);
+      } else {
+        console.log('No public key found');
+      }
+    });
 
+    AppStaticGlobals.txNanoId = this._cookieService.getTxNanoIdCookie();
     this.getTransaction();
 
     const updateTransaction: TransactionModel =

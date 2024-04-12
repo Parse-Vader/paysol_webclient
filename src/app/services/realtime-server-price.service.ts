@@ -147,11 +147,10 @@ export class RealtimeServerPriceService {
       console.error('Error in setPricesInModalItems:', error);
     }
   }
-  async getTokenPrice(cryptoId: string, vsToken: string = 'USDC') : Promise<number> {
-    return this.getCryptoPrices([cryptoId], vsToken)
+  async getTokenPrice(cryptoId: string, VsToken: string = 'USDC') : Promise<number> {
+    return this.getCryptoPrices([cryptoId], VsToken)
       .then(price => {
         if (price !== null) {
-          // return `${price} ${vsToken}`;
           return price[0]!;
         } else {
           return 0;

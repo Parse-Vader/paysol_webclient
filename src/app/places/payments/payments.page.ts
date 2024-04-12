@@ -107,4 +107,7 @@ export class PaymentsPage implements OnInit {
       return modalEl.onDidDismiss();
     });
   }
+
+  protected readonly CurrencyPrice = CurrencyPrice;
+  protected readonly vsToken = vsToken;
 }

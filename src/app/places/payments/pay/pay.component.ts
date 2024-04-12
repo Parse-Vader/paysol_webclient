@@ -62,7 +62,6 @@ export class PayComponent  implements OnInit {
       }
     });
   }
-
   public async calculateAmountInVsToken(amount: number) {
     const priceOfOneUnitOfReceivable = await this.realtimePrice.getTokenPrice(this.item.priceId, this.getStringVsToken(this.selectedValuta));
     const priceOfCalculation = priceOfOneUnitOfReceivable * amount;
@@ -70,7 +69,6 @@ export class PayComponent  implements OnInit {
     this.paymentFormGroup.controls.crypto.setValue(priceOfCalculation);
     this.isCalculating = false;
   }
-
   public async calculateVsTokenInAmount(amount: number) {
     const priceOfOneUnitOfReceivable = await this.realtimePrice.getTokenPrice(this.item.priceId, this.getStringVsToken(this.selectedValuta));
     const priceOfCalculation = amount / priceOfOneUnitOfReceivable;
@@ -78,7 +76,6 @@ export class PayComponent  implements OnInit {
     this.paymentFormGroup.controls.amount.setValue(priceOfCalculation);
     this.isCalculating = false;
   }
-
   getStringVsToken(valuta: string){
     switch (valuta) {
       case 'USD':

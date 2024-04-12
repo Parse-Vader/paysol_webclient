@@ -87,12 +87,16 @@ export class RealtimeServerPriceService {
         return '';
     }
   }
-  async getAllPrices(getPrices: string[] = Object.values(CurrencyPrice), vsToken = 'USDC'): Promise<string[]> {
+  async getAllPrices(getPrices: string[] = Object.values(CurrencyPrice), VsToken = 'USDC'): Promise<string[]> {
     try {
-      const prices = await this.getCryptoPrices(getPrices, vsToken);
+      const prices = await this.getCryptoPrices(getPrices, VsToken);
       return  prices.map((price, index) => {
         if (price !== null) {
-          return `${price} ${this.getStringValuta(vsToken)}`;
+          if (VsToken === vsToken.EURC || VsToken === vsToken.USDC){
+            price = price > 0.001 ? price = this.trimTrailingZeros(price) : price;
+            return VsToken === vsToken.EURC ? `€${price}`: `$${price}`;
+          }
+          return `${price} ${this.getStringValuta(VsToken)}`;
         } else {
           return `Failed to retrieve price for ${getPrices[index]}.`;
         }
@@ -102,6 +106,13 @@ export class RealtimeServerPriceService {
       throw error;
     }
   }
+
+  trimTrailingZeros(number: number): number {
+    const decimalCount = (number.toString().split('.')[1] || '').length;
+    const decimals = decimalCount > 2 ? 2 : decimalCount;
+    return parseFloat(number.toFixed(decimals));
+  }
+
   async getCryptoPrices(cryptoIds: string[], vsToken: string): Promise<(number | null )[]> {
     const params = new HttpParams().set('ids', cryptoIds.join(',')).set('vsToken', vsToken);
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });

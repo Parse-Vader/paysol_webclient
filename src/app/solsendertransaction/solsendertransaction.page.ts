@@ -25,6 +25,7 @@ export class SolsendertransactionPage implements OnInit {
   public receiverAddress: string = '';
   public tokenPrice: number = 0;
   public transactionPriceValue: number = 0;
+  public formattedAmount: string = '';
   constructor(private route: ActivatedRoute,
               private _phantom: PhantomServiceService,
               private _modalCtrl: ModalController,
@@ -45,7 +46,7 @@ export class SolsendertransactionPage implements OnInit {
   }
   makeTransaction()
   {
-    this._phantom.signAndSendTransaction(parseFloat(this.amount), this.key, this.contract, this.nano);
+    this._phantom.signAndSendTransaction(parseFloat(this.formattedAmount), this.key, this.contract, this.nano);
   }
 
    getTransaction() {
@@ -54,6 +55,7 @@ export class SolsendertransactionPage implements OnInit {
         this.transaction = data;
         this.contract = data.contract;
         this.amount = data.amount.toString();
+        this.formattedAmount = parseFloat(this.amount).toFixed(6);
         this.nano = data.id;
         this.nameContranct = this.getContractName(this.contract as Contract);
         this.key = this.grabKey(data.deepLink);

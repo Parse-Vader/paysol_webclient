@@ -15,7 +15,6 @@ export class AppComponent {
               private _authService: AuthService,
               private platform: Platform
   ) {
-    this._barcodeCheckerService.initializeBarcodeModule();
     this.initializeApp();
     this._listener.initializeListener();
   }

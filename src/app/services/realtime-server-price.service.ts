@@ -176,6 +176,7 @@ export enum CurrencyPrice {
   SLERF = 'SLERF',
   BONK = 'Bonk',
   MARINADESTAKEDSOL = 'mSOL',
+  ETH = 'WETH'
 }
 export enum vsToken{
   USDC = 'USDC',

@@ -42,7 +42,7 @@ const contractToCurrencyPriceMap: { [key in Contract]: CurrencyPrice } = {
   [Contract.SLERF]: CurrencyPrice.SLERF,
   [Contract.WBTC]: CurrencyPrice.BTC,
   [Contract.BONK]: CurrencyPrice.BONK,
-  [Contract.WETH]: CurrencyPrice.SOL
+  [Contract.WETH]: CurrencyPrice.ETH
 };
 
 export function mapContractToCurrencyPrice(contract: Contract): CurrencyPrice {

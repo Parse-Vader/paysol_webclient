@@ -59,7 +59,8 @@ export class SolsendertransactionPage implements OnInit {
         this.key = this.grabKey(data.deepLink);
         this.receiverAddress = this.key;
         this.tokenPrice = await this._priceService.getTokenPrice(mapContractToCurrencyPrice(this.contract as Contract));
-        this.transactionPriceValue = this.tokenPrice * parseFloat(this.amount);
+        this.transactionPriceValue = parseFloat((this.tokenPrice * parseFloat(this.amount)).toFixed(2));
+
       },
       (error) => {
         console.error('Error fetching transaction data:', error);

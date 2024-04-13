@@ -1,26 +1,26 @@
 <ion-content [fullscreen]="true">
   <div *ngIf="isCanceled; else transactionSuccess" class="transaction-success-container">
-    <ion-card>
+    <ion-card style="border-radius: 25px">
       <ion-card-header>
         <ion-card-subtitle>Transaction canceled</ion-card-subtitle>
         <ion-card-title>Failed!</ion-card-title>
       </ion-card-header>
       <ion-card-content>
         <ion-icon class="custom-ion-icon" name="close" color="danger" size="large"></ion-icon>
-        <p>Transaction has been canceled.</p>
+        <p>Transaction has been canceled</p>
       </ion-card-content>
     </ion-card>
   </div>
   <ng-template #transactionSuccess>
     <div class="transaction-success-container">
-      <ion-card>
+      <ion-card style="border-radius: 25px">
         <ion-card-header>
           <ion-card-subtitle>Transaction Complete</ion-card-subtitle>
           <ion-card-title>Success!</ion-card-title>
         </ion-card-header>
         <ion-card-content>
           <ion-icon class="custom-ion-icon" name="checkmark-circle" color="success" size="large"></ion-icon>
-          <p>You have successfully transferred {{amount}} {{nameContranct}} to {{key}}.</p>
+          <p>You have successfully made the transaction to: {{key}}</p>
         </ion-card-content>
       </ion-card>
     </div>

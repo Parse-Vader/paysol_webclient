@@ -15,7 +15,7 @@
               <ion-text style="font-weight: bold;">Transaction Receiver:</ion-text>
             </ion-col>
             <ion-col size="12" style="display: flex; flex-direction: column; align-items: center; font-size: small">
-              <ion-text>{{receiverAddress}}</ion-text>
+              <ion-text class="address-text">{{receiverAddress}}</ion-text>
             </ion-col>
           </ion-card>
         </ion-row>
@@ -23,3 +23,12 @@
     </div>
   </ion-card>
 </div>
+
+<style>
+  .address-text {
+    width: 100%;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    text-align: center;
+  }
+</style>

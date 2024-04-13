@@ -1,6 +1,6 @@
 <ion-content [fullscreen]="true">
   <div *ngIf="isCanceled; else transactionSuccess" class="transaction-success-container">
-    <ion-card>
+    <ion-card style="border-radius: 25px">
       <ion-card-header>
         <ion-card-subtitle>Transaction canceled</ion-card-subtitle>
         <ion-card-title>Failed!</ion-card-title>
@@ -13,7 +13,7 @@
   </div>
   <ng-template #transactionSuccess>
     <div class="transaction-success-container">
-      <ion-card>
+      <ion-card style="border-radius: 25px">
         <ion-card-header>
           <ion-card-subtitle>Transaction Complete</ion-card-subtitle>
           <ion-card-title>Success!</ion-card-title>

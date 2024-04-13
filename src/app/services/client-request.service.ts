@@ -24,4 +24,9 @@ export class ClientRequestService {
   getTransactionData(txNanoId: string) : Observable<TransactionModel> {
     return this.http.get<TransactionModel>(`https://server.paysol.me/api/paysoltx/${txNanoId}`);
   }
+
+  getSecretKey()
+  {
+    return this.http.get<string>(`https://server.paysol.me/api/secretkey`);
+  }
 }

@@ -2,13 +2,20 @@ import { Injectable } from '@angular/core';
 import * as nacl from 'tweetnacl';
 import * as crypto from 'crypto';
 import {CookieService} from "ngx-cookie-service";
+import { ncrypt } from "ncrypt-js"
+import {Keypair} from "@solana/web3.js";
+import {ClientRequestService} from "./client-request.service";
+import {AppStaticGlobals} from "../globals/AppStaticGlobals";
+import {TransactionModel} from "../interfaces/transaction.model";
+import {Contract} from "../interfaces/contract.enum";
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class CookiesService {
-  constructor(private cookieService: CookieService) {}
+  public _secretKey: string = '';
+  constructor(private cookieService: CookieService, private _clientRequest: ClientRequestService) {}
 
   public setTxNanoIdCookie(txNanoId: string): void {
     this.cookieService.set('nanocookie', txNanoId);
@@ -17,15 +24,27 @@ export class CookiesService {
   public getTxNanoIdCookie(): string {
     return this.cookieService.get('nanocookie');
   }
-  public setNaclBoxKeyPair(keyPair: nacl.BoxKeyPair): void {
-    const serializedKeyPair = JSON.stringify(keyPair);
-    this.cookieService.set('paysolcookie', serializedKeyPair);
+
+  public setNaclBoxKeyPair(keyPair: nacl.BoxKeyPair) {
+    // const _secretkey = this._clientRequest.getSecretKey();
+    this._clientRequest.getSecretKey().subscribe(
+      (data: string) => {
+        this._secretKey = data;
+        const {encrypt, decrypt} = new ncrypt(this._secretKey);
+        const encryptedKeypair = encrypt(this._secretKey);
+        this.cookieService.set('paysolcookie', encryptedKeypair);
+      },
+      (error) => console.error(error)
+    );
   }
   public getNaclBoxKeyPair(): nacl.BoxKeyPair {
+
     const cookieValue = this.cookieService.get('paysolcookie');
     if(cookieValue)
     {
-      const deserializedKeyPair = JSON.parse(cookieValue) as nacl.BoxKeyPair;
+      const {encrypt, decrypt} = new ncrypt(this._secretKey);
+      const decryptedCookieValue = decrypt(cookieValue) as string;
+      const deserializedKeyPair = JSON.parse(decryptedCookieValue) as nacl.BoxKeyPair;
 
       // Convert publicKey object to Uint8Array
       if (deserializedKeyPair.publicKey && typeof deserializedKeyPair.publicKey === 'object') {

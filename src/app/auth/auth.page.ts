@@ -24,6 +24,7 @@ export class AuthPage implements OnInit {
         this.handleResponse(params);
       }
     });
+
   }
 
   connectIsClicked()

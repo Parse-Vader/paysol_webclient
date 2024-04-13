@@ -2,11 +2,12 @@ import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {PhantomServiceService} from "../services/phantom-service.service";
 import {ModalController} from "@ionic/angular";
-import {Contract} from "../interfaces/contract.enum";
+import {Contract, mapContractToCurrencyPrice} from "../interfaces/contract.enum";
 import {ClientRequestService} from "../services/client-request.service";
 import {AppStaticGlobals} from "../globals/AppStaticGlobals";
 import {TransactionModel} from "../interfaces/transaction.model";
 import {CookiesService} from "../services/cookies.service";
+import {RealtimeServerPriceService} from "../services/realtime-server-price.service";
 
 @Component({
   selector: 'app-solsendertransaction',
@@ -22,11 +23,14 @@ export class SolsendertransactionPage implements OnInit {
   public nameContranct: string = '';
   public transaction: TransactionModel = {id: "", contract: 0, message: "", amount: 0, sender: '', receiver: '', finalised: false, deepLink: '', date: new Date()};
   public receiverAddress: string = '';
+  public tokenPrice: number = 0;
+  public transactionPriceValue: number = 0;
   constructor(private route: ActivatedRoute,
               private _phantom: PhantomServiceService,
               private _modalCtrl: ModalController,
               private _clientRequestService: ClientRequestService,
-              private _cookieService: CookiesService) { }
+              private _cookieService: CookiesService,
+              private _priceService: RealtimeServerPriceService) { }
   ngOnInit()
   {
     // this.route.queryParams.subscribe(params => {
@@ -44,9 +48,9 @@ export class SolsendertransactionPage implements OnInit {
     this._phantom.signAndSendTransaction(parseFloat(this.amount), this.key, this.contract, this.nano);
   }
 
-  getTransaction() {
+   getTransaction() {
     this._clientRequestService.getTransactionData(AppStaticGlobals.txNanoId).subscribe(
-      (data: TransactionModel) => {
+      async (data: TransactionModel) => {
         this.transaction = data;
         this.contract = data.contract;
         this.amount = data.amount.toString();
@@ -54,8 +58,8 @@ export class SolsendertransactionPage implements OnInit {
         this.nameContranct = this.getContractName(this.contract as Contract);
         this.key = this.grabKey(data.deepLink);
         this.receiverAddress = this.key;
-
-
+        this.tokenPrice = await this._priceService.getTokenPrice(mapContractToCurrencyPrice(this.contract as Contract));
+        this.transactionPriceValue = this.tokenPrice * parseFloat(this.amount);
       },
       (error) => {
         console.error('Error fetching transaction data:', error);

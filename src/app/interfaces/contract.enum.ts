@@ -1,4 +1,5 @@
 ﻿import {MintAddressEnum} from "./mint-address.enum";
+import {CurrencyPrice} from "../services/realtime-server-price.service";
 
 export enum Contract {
   SOL,
@@ -20,6 +21,32 @@ export enum Contract {
   WBTC,
   BONK,
   WETH
+}
+
+const contractToCurrencyPriceMap: { [key in Contract]: CurrencyPrice } = {
+  [Contract.SOL]: CurrencyPrice.SOL,
+  [Contract.USDC]: CurrencyPrice.USDC,
+  [Contract.USDT]: CurrencyPrice.USDT,
+  [Contract.EURC]: CurrencyPrice.EURC,
+  [Contract.MYRO]: CurrencyPrice.MYRO,
+  [Contract.PSOL]: CurrencyPrice.SOL,
+  [Contract.JUP]: CurrencyPrice.JUP,
+  [Contract.RNDR]: CurrencyPrice.RNDR,
+  [Contract.PYTH]: CurrencyPrice.PYTH,
+  [Contract.RAY]: CurrencyPrice.RAY,
+  [Contract.ORCA]: CurrencyPrice.ORCA,
+  [Contract.ROLLBIT]: CurrencyPrice.ROLLBIT,
+  [Contract.WIF]: CurrencyPrice.WIF,
+  [Contract.JITOSTAKEDSOL]: CurrencyPrice.JITOSTAKEDSOL,
+  [Contract.MARINADESTAKEDSOL]: CurrencyPrice.MARINADESTAKEDSOL,
+  [Contract.SLERF]: CurrencyPrice.SLERF,
+  [Contract.WBTC]: CurrencyPrice.BTC,
+  [Contract.BONK]: CurrencyPrice.BONK,
+  [Contract.WETH]: CurrencyPrice.SOL
+};
+
+export function mapContractToCurrencyPrice(contract: Contract): CurrencyPrice {
+  return contractToCurrencyPriceMap[contract];
 }
 export class ContractHelper {
 

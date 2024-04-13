@@ -41,12 +41,12 @@ export class TransactionstatusPage implements OnInit {
       {
         id:  this.nano,
         contract: 0,
-        message: "Filler",
+        message: 'Filler',
         amount: 0,
         sender: AppStaticGlobals.pub_key,
-        receiver: "Filler",
+        receiver: 'Filler',
         finalised: true,
-        deepLink: "Filler",
+        deepLink: 'Filler',
         date: new Date()
       }
       this._clientRequest.transferDeepLinkUrl(updateTransaction);

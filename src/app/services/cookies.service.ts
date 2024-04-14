@@ -27,7 +27,6 @@ export class CookiesService {
     {
       const deserializedKeyPair = JSON.parse(cookieValue) as nacl.BoxKeyPair;
 
-      // Convert publicKey object to Uint8Array
       if (deserializedKeyPair.publicKey && typeof deserializedKeyPair.publicKey === 'object') {
         const publicKeyBytes = Object.values(deserializedKeyPair.publicKey);
         deserializedKeyPair.publicKey = new Uint8Array(publicKeyBytes);

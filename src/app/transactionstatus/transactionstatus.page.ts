@@ -66,7 +66,6 @@ export class TransactionstatusPage implements OnInit {
       },
       (error) => {
         console.error('Error fetching transaction data:', error);
-        // Handle the error here, such as displaying a message to the user
       }
     );
   }

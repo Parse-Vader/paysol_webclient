@@ -34,13 +34,6 @@ export class SolsendertransactionPage implements OnInit {
               private _priceService: RealtimeServerPriceService) { }
   ngOnInit()
   {
-    // this.route.queryParams.subscribe(params => {
-    //   this.key = params['key'];
-    //   this.amount = params['amount'];
-    //   this.contract = params['contract'];
-    //   this.nano = params['nano'];
-    //
-    // });
     AppStaticGlobals.txNanoId = this._cookieService.getTxNanoIdCookie();
     this.getTransaction();
   }
@@ -65,8 +58,6 @@ export class SolsendertransactionPage implements OnInit {
 
       },
       (error) => {
-        console.error('Error fetching transaction data:', error);
-        // Handle the error here, such as displaying a message to the user
       }
     );
   }

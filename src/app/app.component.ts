@@ -1,6 +1,5 @@
 import {Component} from '@angular/core';
 import {BarcodeCheckerService} from './services/google-module.service';
-import {ListenerNavigationService} from "./services/listener-navigation.service";
 import {AuthService} from "./auth/auth.service";
 import {Platform} from "@ionic/angular";
 @Component({
@@ -10,13 +9,11 @@ import {Platform} from "@ionic/angular";
 })
 export class AppComponent {
 
-  constructor(private _listener: ListenerNavigationService,
-              private _barcodeCheckerService: BarcodeCheckerService,
+  constructor(private _barcodeCheckerService: BarcodeCheckerService,
               private _authService: AuthService,
               private platform: Platform
   ) {
     this.initializeApp();
-    this._listener.initializeListener();
   }
 
   initializeApp() {

@@ -25,8 +25,8 @@ export class ClientRequestService {
     return this.http.get<TransactionModel>(`https://server.paysol.me/api/paysoltx/${txNanoId}`);
   }
 
-  getSecretKey()
+  setDate()
   {
-    return this.http.get<string>(`https://server.paysol.me/api/secretkey`);
+    return this.http.post<string>(`https://server.paysol.me/api/setdate`, {});
   }
 }

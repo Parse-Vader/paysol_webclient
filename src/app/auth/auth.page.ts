@@ -32,7 +32,6 @@ export class AuthPage implements OnInit {
 
   protected handleChange(e : any){
     AppStaticGlobals.setWalletSettings(e.detail.value);
-    alert(AppStaticGlobals.walletType);
     this.connectIsClicked();
   }
 
@@ -94,12 +93,6 @@ export class AuthPage implements OnInit {
       }
     }
   }
-  // Connect(): void {
-  //   setTimeout(() => {
-  //     this.showSpinner = false;
-  //     this._phantomService.connect();
-  //   }, 1000);
-  // }
   Connect(): void {
     this._phantomService.connect();
   }

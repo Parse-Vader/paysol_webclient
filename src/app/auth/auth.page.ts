@@ -6,6 +6,10 @@ import * as nacl from "tweetnacl";
 import * as bs58 from "bs58";
 import { ConnectData } from "../interfaces/connect.data";
 import {CookiesService} from "../services/cookies.service";
+export enum WalletType {
+  PHANTOM = 'phantom',
+  SOLFLARE = 'solflare'
+}
 
 @Component({
   selector: 'app-auth',
@@ -20,18 +24,23 @@ export class AuthPage implements OnInit {
   ngOnInit() {
     this._route.queryParams.subscribe(params => {
       const paramsLength = Object.keys(params).length;
-      if (params['phantom_encryption_public_key'] || AppStaticGlobals.phantom_encryption_public_key !== "") {
+      if (params['phantom_encryption_public_key'] || params['solflare_encryption_public_key'] ) {
         this.handleResponse(params);
       }
     });
-
   }
 
-  connectIsClicked()
+  protected handleChange(e : any){
+    AppStaticGlobals.setWalletSettings(e.detail.value);
+    alert(AppStaticGlobals.walletType);
+    this.connectIsClicked();
+  }
+
+  private connectIsClicked()
   {
     this._route.queryParams.subscribe(params => {
       const paramsLength = Object.keys(params).length;
-      if (params['phantom_encryption_public_key'] || AppStaticGlobals.phantom_encryption_public_key !== "") {
+      if (params['phantom_encryption_public_key'] || params['solflare_encryption_public_key'] ) {
         this.handleResponse(params);
       } else {
         this.Connect();
@@ -39,13 +48,18 @@ export class AuthPage implements OnInit {
     });
   }
   handleResponse( params: any ) {
-    if (params['phantom_encryption_public_key']) {
+    if (params['phantom_encryption_public_key'] || params['solflare_encryption_public_key'] ) {
+      AppStaticGlobals.wallet_encryption_public_key
+        = params['phantom_encryption_public_key']
+        ?? params['solflare_encryption_public_key'] ;
 
-      AppStaticGlobals.phantom_encryption_public_key = params['phantom_encryption_public_key'];
+      params['phantom_encryption_public_key']
+        ? AppStaticGlobals.setWalletSettings(WalletType.PHANTOM)
+        : AppStaticGlobals.setWalletSettings(WalletType.SOLFLARE);
 
       try{
         const sharedDapSecret = nacl.box.before(
-          bs58.decode(AppStaticGlobals.phantom_encryption_public_key),
+          bs58.decode(AppStaticGlobals.wallet_encryption_public_key),
           this._phantomService.getDapKeyPairSecret()
         );
 
@@ -57,7 +71,7 @@ export class AuthPage implements OnInit {
           AppStaticGlobals.Data,
           AppStaticGlobals.Nonce,
           sharedDapSecret
-        ); // current error. unable to decrypt data
+        );
 
         AppStaticGlobals.pub_key = connectData.public_key;
         AppStaticGlobals.session = connectData.session;
@@ -70,22 +84,25 @@ export class AuthPage implements OnInit {
           });
         }
         else{
-          this._router.navigateByUrl('/places/payments').catch(error => {
-          });
+          // this._router.navigateByUrl('/places/payments').catch(error => {
+          // });
+          console.log('wat moet hier dan Esat?')
         }
-
       }
-
       catch (e) {
         alert(e);
       }
-
     }
   }
+  // Connect(): void {
+  //   setTimeout(() => {
+  //     this.showSpinner = false;
+  //     this._phantomService.connect();
+  //   }, 1000);
+  // }
   Connect(): void {
-    setTimeout(() => {
-      this.showSpinner = false;
-      this._phantomService.connect();
-    }, 1000);
+    this._phantomService.connect();
   }
 }
+
+

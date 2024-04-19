@@ -22,7 +22,7 @@ import {CookiesService} from "./cookies.service";
 })
 
 export class PhantomServiceService  {
-  private _phantom_encryption_public_key: string = "";
+  private _wallet_encryption_public_key: string = "";
   private _nonce: string = "";
   private _data: any;
   private _dappKeyPair = nacl.box.keyPair();
@@ -80,7 +80,7 @@ export class PhantomServiceService  {
   }
 
   private buildUrl (path: string, params: URLSearchParams) {
-    return `phantom://v1/${path}?${params.toString()}`;
+    return `${AppStaticGlobals.walletType}://v1/${path}?${params.toString()}`;
   };
 
   public async connect() {
@@ -88,7 +88,7 @@ export class PhantomServiceService  {
     const params = new URLSearchParams({
       dapp_encryption_public_key: bs58.encode(this.getCookie()!.publicKey), //hier gaat ie fout
       cluster: 'mainnet-beta',
-      app_url: 'https://phantom.app/',
+      app_url: AppStaticGlobals.app_url,
       redirect_link: this._backToPaysol,
     });
 
@@ -117,7 +117,7 @@ export class PhantomServiceService  {
     });
 
     const sharedSecretDapp = nacl.box.before(
-      bs58.decode(this._phantom_encryption_public_key),
+      bs58.decode(this._wallet_encryption_public_key),
       this.getCookie()!.secretKey
     );
     const connectData: ConnectData = this.decryptPayload(this._data, this._nonce, sharedSecretDapp);
@@ -159,10 +159,10 @@ export class PhantomServiceService  {
   };
 
   private createSplTokenTransaction = async (amount: number, pub_receiver: string, contractType: number) => {
-    this._phantom_encryption_public_key = AppStaticGlobals.phantom_encryption_public_key;
+    this._wallet_encryption_public_key = AppStaticGlobals.wallet_encryption_public_key;
 
     const sharedSecretDapp = nacl.box.before(
-      bs58.decode(this._phantom_encryption_public_key),
+      bs58.decode(this._wallet_encryption_public_key),
       this.getDapKeyPairSecret()!
     );
 
@@ -207,13 +207,12 @@ export class PhantomServiceService  {
 
   private createTransferTransaction = async (amount: number, pub_receiver: string) => {
 
-    this._phantom_encryption_public_key = AppStaticGlobals.phantom_encryption_public_key;
+    this._wallet_encryption_public_key = AppStaticGlobals.wallet_encryption_public_key;
 
     const sharedSecretDapp = nacl.box.before(
-      bs58.decode(this._phantom_encryption_public_key),
+      bs58.decode(this._wallet_encryption_public_key),
       this.getDapKeyPairSecret()!
     );
-
 
     this._data = AppStaticGlobals.Data;
     this._nonce = AppStaticGlobals.Nonce;

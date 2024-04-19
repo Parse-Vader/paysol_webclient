@@ -16,7 +16,6 @@ import { App } from '@capacitor/app';
 import {ContractHelper} from "../interfaces/contract.enum";
 import {CookiesService} from "./cookies.service";
 
-
 @Injectable({
   providedIn: 'root'
 })

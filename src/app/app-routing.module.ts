@@ -5,7 +5,7 @@ import {AuthGuard} from "./auth/auth.guard";
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'places/payments',
+    redirectTo: 'auth',
     pathMatch: 'full'
   },
   {
@@ -24,7 +24,7 @@ const routes: Routes = [
   {
     path: 'solsendertransaction',
     loadChildren: () => import('./solsendertransaction/solsendertransaction.module').then( m => m.SolsendertransactionPageModule),
-    // canLoad: [AuthGuard]
+    canLoad: [AuthGuard]
   },
   {
     path: 'tx',

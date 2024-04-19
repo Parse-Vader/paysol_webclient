@@ -38,15 +38,11 @@ export class CookiesService {
     );
   }
   public getNaclBoxKeyPair(): nacl.BoxKeyPair {
-
     const cookieValue = this.cookieService.get('paysolcookie');
     if(cookieValue)
     {
-      const {encrypt, decrypt} = new ncrypt(this._secretKey);
-      const decryptedCookieValue = decrypt(cookieValue) as string;
-      const deserializedKeyPair = JSON.parse(decryptedCookieValue) as nacl.BoxKeyPair;
+      const deserializedKeyPair = JSON.parse(cookieValue) as nacl.BoxKeyPair;
 
-      // Convert publicKey object to Uint8Array
       if (deserializedKeyPair.publicKey && typeof deserializedKeyPair.publicKey === 'object') {
         const publicKeyBytes = Object.values(deserializedKeyPair.publicKey);
         deserializedKeyPair.publicKey = new Uint8Array(publicKeyBytes);

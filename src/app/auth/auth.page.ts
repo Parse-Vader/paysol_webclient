@@ -19,7 +19,6 @@ export enum WalletType {
 
 export class AuthPage implements OnInit {
   public link: string = '';
-  public showSpinner: boolean = true;
   constructor(private _phantomService: PhantomServiceService, private _route: ActivatedRoute, private _router: Router, private _cookieService: CookiesService) { }
   ngOnInit() {
     this._route.queryParams.subscribe(params => {
@@ -32,7 +31,6 @@ export class AuthPage implements OnInit {
 
   protected handleChange(e : any){
     AppStaticGlobals.setWalletSettings(e.detail.value);
-    alert(AppStaticGlobals.walletType);
     this.connectIsClicked();
   }
 

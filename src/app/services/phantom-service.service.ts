@@ -16,14 +16,13 @@ import { App } from '@capacitor/app';
 import {ContractHelper} from "../interfaces/contract.enum";
 import {CookiesService} from "./cookies.service";
 
-
 @Injectable({
   providedIn: 'root'
 })
 
 export class PhantomServiceService  {
-  private _wallet_encryption_public_key: string = "";
-  private _nonce: string = "";
+  private _wallet_encryption_public_key: string = '';
+  private _nonce: string = '';
   private _data: any;
   private _dappKeyPair = nacl.box.keyPair();
   // private _backToPaysol = `http://test.paysol.me/places/payements`;
@@ -47,8 +46,6 @@ export class PhantomServiceService  {
         alert(e);
       }
     }
-
-
   };
 
   public encryptPayload = (payload: any, sharedSecret?: Uint8Array) => {

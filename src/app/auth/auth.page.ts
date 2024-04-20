@@ -83,23 +83,13 @@ export class AuthPage implements OnInit {
           this._router.navigateByUrl('/solsendertransaction').catch(error => {
           });
         }
-        else{
-          // this._router.navigateByUrl('/places/payments').catch(error => {
-          // });
-          console.log('wat moet hier dan Esat?')
-        }
       }
       catch (e) {
         alert(e);
       }
     }
   }
-  // Connect(): void {
-  //   setTimeout(() => {
-  //     this.showSpinner = false;
-  //     this._phantomService.connect();
-  //   }, 1000);
-  // }
+
   Connect(): void {
     this._phantomService.connect();
   }

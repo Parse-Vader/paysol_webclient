@@ -19,7 +19,9 @@ export class CookiesService {
   }
   public setNaclBoxKeyPair(keyPair: nacl.BoxKeyPair): void {
     const serializedKeyPair = JSON.stringify(keyPair);
-    this.cookieService.set('paysolcookie', serializedKeyPair);
+    const currentTime = new Date();
+    const expireTime = new Date(currentTime.getTime() + 30 * 1000);
+    this.cookieService.set('paysolcookie', serializedKeyPair, { expires: expireTime });
   }
   public getNaclBoxKeyPair(): nacl.BoxKeyPair {
     const cookieValue = this.cookieService.get('paysolcookie');
@@ -40,7 +42,8 @@ export class CookiesService {
       return deserializedKeyPair;
     }
 
-    return null!;
+    alert("Paysol session expired please try again");
+    return nacl.box.keyPair();
   }
 
 }

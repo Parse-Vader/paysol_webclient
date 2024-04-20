@@ -36,16 +36,10 @@ export class AuthPage implements OnInit {
 
   private connectIsClicked()
   {
-    this._route.queryParams.subscribe(params => {
-      const paramsLength = Object.keys(params).length;
-      if (params['phantom_encryption_public_key'] || params['solflare_encryption_public_key'] ) {
-        this.handleResponse(params);
-      } else {
         this.Connect();
-      }
-    });
   }
   handleResponse( params: any ) {
+
     if (params['phantom_encryption_public_key'] || params['solflare_encryption_public_key'] ) {
       AppStaticGlobals.wallet_encryption_public_key
         = params['phantom_encryption_public_key']
@@ -83,7 +77,6 @@ export class AuthPage implements OnInit {
         }
       }
       catch (e) {
-        alert(e);
       }
     }
   }

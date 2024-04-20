@@ -25,8 +25,7 @@ export class PhantomServiceService  {
   private _nonce: string = '';
   private _data: any;
   private _dappKeyPair = nacl.box.keyPair();
-  // private _backToPaysol = `https://app.paysol.me/auth`;
-  private _backToPaysol = `http://192.168.178.157:8100/auth`;
+  private _backToPaysol = `https://app.paysol.me/auth`;
   private _connection: Connection = new Connection("https://nd-471-114-142.p2pify.com/3a2a6e114f8bead3b52300fad0789a73",
     {wsEndpoint: "wss://ws-nd-471-114-142.p2pify.com/3a2a6e114f8bead3b52300fad0789a73"});
 
@@ -124,7 +123,7 @@ export class PhantomServiceService  {
     };
 
     const [nonce, encryptedPayload] = this.encryptPayload(payload, sharedSecretDapp);
-    const backToPaysolTransactionStatus: string = `http://192.168.178.157:8100/transactionstatus`;
+    const backToPaysolTransactionStatus: string = `https://app.paysol.me/transactionstatus`;
 
     const paramsTransaction = new URLSearchParams({
       dapp_encryption_public_key: bs58.encode(this.getCookie()!.publicKey),

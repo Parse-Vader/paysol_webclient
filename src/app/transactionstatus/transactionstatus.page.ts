@@ -83,9 +83,6 @@ export class TransactionstatusPage implements OnInit {
     return subParts.slice(0, subParts.indexOf('con')).join('/');
   }
 
-  public home(){
-    this._router.navigate(['/places/payments'])
-  }
   private getContractName(con: Contract): string {
     switch (con) {
       case Contract.SOL:
